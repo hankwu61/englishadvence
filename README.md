@@ -60,7 +60,19 @@ Web 版英語冒險 RPG,設計理念參考酷英(coolenglish)學習法:**學語�
 | **🧠 深度思考** | 僅支援的供應商(如 KIMI)顯示;關閉時回覆快數倍 |
 | **🧪 測試連線** | 實際發一次最小請求,顯示成功回應與耗時,或明確的錯誤原因(401、CORS、端點錯誤…) |
 
-設定(含金鑰)只存在瀏覽器 localStorage,直接連線該服務、不經任何中介伺服器。舊版設定會自動搬移。專案內建一把 KIMI 預設金鑰(`js/ai.js` 的 `AI_PROVIDERS.kimi.defaultKey`)——**Key 寫在前端原始碼,僅適合個人本機使用,請勿公開部署**。
+#### 🔑 第一次使用:填入你自己的 API 金鑰
+
+**本專案不內建任何 API 金鑰**,原始碼中也不會出現金鑰。首次使用 AI 功能時:
+
+1. 到你選用的供應商申請金鑰(例如 KIMI 到 `platform.moonshot.cn`、Groq 到 `console.groq.com`)
+2. 開啟 App → **🏆 進度分頁 → ⚙️ AI 設定**
+3. 選供應商 → 貼上金鑰 → 按 **🧪 測試連線** 確認可用 → **儲存**
+
+金鑰只寫入**你自己瀏覽器的 localStorage**,不會進入原始碼、不會被 commit、也不會經過任何中介伺服器——瀏覽器直接連到你選的服務。因此這個專案可以安全地公開分享,每個使用者各自填自己的金鑰。
+
+> 完全不想用雲端服務或不想付費?選 **Ollama(本機執行,免金鑰)**,在自己電腦跑模型即可。
+>
+> 開發者注意:`build_video_sentences.py` 也改為讀取環境變數 `KIMI_API_KEY`,請勿把金鑰寫回原始碼再提交。
 
 > 注意:瀏覽器直連需要該服務允許 CORS。KIMI、Groq、OpenRouter、Gemini、Ollama 實測可用;若某服務擋 CORS,測試連線會明確告知。
 
@@ -138,15 +150,15 @@ python -m http.server 8760
 
 | 路徑 | 說明 |
 |---|---|
-| `index.html` | 遊戲頁面(四個畫面:地圖 / 戰鬥 / 跟讀 / 輸出)|
+| `index.html` | 單頁應用(五分頁主畫面 + 各活動畫面)|
 | `css/style.css` | 介面樣式與動畫 |
 | `js/words.js` | 五級單字庫(各 50 字)|
 | `js/vowels.js` | 母音道場資料(6 組對比 + 訣竅卡 + 最小對比詞)|
 | `js/connected.js` | 商務連音特訓資料(18 句,連音/閃音/弱讀標註)|
 | `js/ai.js` | AI 對話教室(KIMI API 直連、語音輸入、回饋卡)|
-| `js/videos.js` | 影片資料(7 支演講 × 精選名句)|
+| `js/videos.js` | 影片資料(22 支影片 × CEFR 分級 × 主題標籤)|
 | `js/video.js` | 看影片學英文邏輯(逐字評分、AI 講評、同步文字稿、文法詞態)|
-| `js/transcripts.js` | 影片字幕時間軸(fetch_transcripts.py 自動產生)|
+| `js/transcripts.js` | 影片字幕時間軸(**未收錄於本 repo**,clone 後執行 `python fetch_transcripts.py` 產生)|
 | `js/notebook.js` | 單字單句本(收藏、複習、跟讀挑戰)|
 | `fetch_transcripts.py` | 字幕抓取腳本(yt-dlp,處理 YouTube pot token)|
 | `js/video_sentences.js` | 從字幕擷取的口說練習句(build_video_sentences.py 產生)|
@@ -155,12 +167,12 @@ python -m http.server 8760
 | `js/lessons_junior.js` ~ `lessons_phd.js` | 各級第 2~21 課(每檔 20 課)|
 | `js/timings.js` | 210 軌課文逐字時間戳(generate_timings.py 自動產生)|
 | `js/glossary.js` | 課文高頻字離線中文注釋庫(約 360 字)|
-| `js/dictionary.js` | 全離線英英詞典(WordNet,3,196 字,466KB)|
+| `js/dictionary.js` | 全離線英英詞典(WordNet,6,684 字,約 900KB)|
 | `build_dictionary.py` | 離線詞典建置腳本(nltk / WordNet)|
 | `generate_timings.py` | 重產課文音檔並擷取 WordBoundary 時間戳(需 `boundary="WordBoundary"`)|
 | `js/collocations.js` | 五級語塊庫(各 15 組,含英英釋義與例句)|
 | `js/game.js` | 遊戲邏輯 |
-| `audio/` | 475 個預錄音檔(見下)|
+| `audio/` | 4,224 個預錄音檔(見下)|
 | `generate_audio.py` | Edge TTS 語音產生腳本 |
 
 ## 語音檔規則(Edge TTS,en-US-JennyNeural)
