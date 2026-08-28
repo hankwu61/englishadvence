@@ -8,7 +8,8 @@ venv/
 # 需要同步文字稿功能時,自行執行:python fetch_transcripts.py
 js/transcripts.js
 
-# 編輯器 / 系統暫存
+# 編輯器 / 工具 / 系統暫存
+.claude/
 .vscode/
 .idea/
 .DS_Store
