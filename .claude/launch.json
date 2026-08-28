@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "english-adventure",
+      "runtimeExecutable": "python",
+      "runtimeArgs": ["-m", "http.server", "8760"],
+      "port": 8760
+    }
+  ]
+}

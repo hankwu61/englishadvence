@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>英語冒險王 English Adventure King</title>
+  <link rel="stylesheet" href="css/style.css?v=2" />
+</head>
+<body>
+  <div class="stars"></div>
+  <div id="app">
+
+    <!-- ===== 主畫面(五分頁)===== -->
+    <section id="screen-title" class="screen active">
+
+      <!-- 今日 -->
+      <div id="tab-today" class="tabview active">
+        <div class="hello-row">
+          <div class="hello-avatar">🧝</div>
+          <div class="hello-txt"><b id="today-hello">哈囉,冒險者!</b><span>今天想練哪一項?</span></div>
+        </div>
+        <div class="card">
+          <div class="card-title">📈 課程總進度</div>
+          <div class="today-progress">
+            <div class="pbar"><i id="today-pbar" style="width:0%"></i></div>
+            <span class="pv" id="today-pv">0 / 105 課</span>
+          </div>
+        </div>
+        <div class="card-title" style="margin:18px 2px 10px">📌 今日任務</div>
+        <div id="today-tasks"></div>
+        <div class="card-title" style="margin:18px 2px 10px">⚡ 快速開始</div>
+        <div class="quick-row">
+          <button class="quick-btn" data-goto="learn"><span class="qi">📚</span><span class="ql">課程</span></button>
+          <button class="quick-btn" data-goto="explore"><span class="qi">📺</span><span class="ql">影片</span></button>
+          <button class="quick-btn" data-goto="coach"><span class="qi">🎯</span><span class="ql">教練</span></button>
+          <button class="quick-btn" id="quick-notebook"><span class="qi">📒</span><span class="ql">收藏本</span></button>
+        </div>
+        <p class="footer-tip">發音由 Edge TTS 預錄 · 進度自動儲存於瀏覽器</p>
+      </div>
+
+      <!-- 學習 -->
+      <div id="tab-learn" class="tabview">
+        <h1 class="tab-title">學習</h1>
+        <p class="tab-sub">國中到博士五大等級,每級 21 課:課文・字詞・發音・聽力・文法</p>
+        <div id="level-grid" class="level-grid"></div>
+      </div>
+
+      <!-- 教練 -->
+      <div id="tab-coach" class="tabview">
+        <h1 class="tab-title">教練</h1>
+        <p class="tab-sub">AI 對話與發音特訓,即時矯正你的口說</p>
+        <div class="dojo-panel">
+          <div class="dojo-head">🤖 AI 對話教室<small>與 AI 真實對話,即時分析文法、發音與內容切題度</small></div>
+          <div id="ai-level-grid" class="dojo-grid"></div>
+        </div>
+        <div class="dojo-panel">
+          <div class="dojo-head">👂 母音道場<small>台灣學習者最易混淆的美式母音對比,聽音辨字</small></div>
+          <div id="dojo-grid" class="dojo-grid"></div>
+        </div>
+        <div class="dojo-panel">
+          <div class="dojo-head">🌊 連音特訓<small>連音・閃音・弱讀,聽懂母語人士的真實語速</small></div>
+          <div class="conn-mechs">
+            <div class="mech-chip">🔗<b>連音</b><span>move on → mo‿von</span></div>
+            <div class="mech-chip">⚡<b>閃音</b><span>meeting → mee‿ding</span></div>
+            <div class="mech-chip">🪶<b>弱讀</b><span>going to → gonna</span></div>
+          </div>
+          <div class="conn-start-row">
+            <button id="btn-conn-start" class="btn-mode btn-mode-main">🎧 開始特訓</button>
+            <span id="conn-best" class="dj-best"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 探索 -->
+      <div id="tab-explore" class="tabview">
+        <h1 class="tab-title">探索</h1>
+        <p class="tab-sub">用遊戲和產出練習,把學到的英文用出來</p>
+        <div class="dojo-panel">
+          <div class="dojo-head">📺 看影片學英文 AI 口說<small>看名演講 → 逐句跟讀 → AI 逐字評分與講評(80 分達標)</small></div>
+          <div id="video-filters" class="video-filters"></div>
+          <div id="video-grid" class="video-grid"></div>
+        </div>
+        <div class="dojo-panel">
+          <div class="dojo-head">⚔️ 單字冒險<small>10 場戰鬥打倒單字與語塊怪物,終戰 Boss 拼字</small></div>
+          <div id="adv-grid" class="dojo-grid"></div>
+        </div>
+        <div class="dojo-panel">
+          <div class="dojo-head">🎤 跟讀特訓<small>Shadowing:原速/慢速例句跟讀,錄音比對語調</small></div>
+          <div id="shadow-pills" class="pill-row"></div>
+        </div>
+        <div class="dojo-panel">
+          <div class="dojo-head">✍️ 輸出挑戰<small>聽例句後,用目標語塊造出自己的句子</small></div>
+          <div id="output-pills" class="pill-row"></div>
+        </div>
+      </div>
+
+      <!-- 進度 -->
+      <div id="tab-progress" class="tabview">
+        <h1 class="tab-title">進度</h1>
+        <p class="tab-sub">你的學習軌跡與最佳紀錄</p>
+        <div class="stat-grid" id="stat-grid"></div>
+        <button class="task-card" id="nb-entry">
+          <span class="task-icon i1">📒</span>
+          <span class="task-info"><b>單字單句本</b><span id="nb-count">0 單字・0 句子</span></span>
+          <span class="task-go">›</span>
+        </button>
+        <button class="task-card" id="settings-entry">
+          <span class="task-icon i3">⚙️</span>
+          <span class="task-info"><b>AI 設定</b><span id="set-summary">切換 AI 供應商、模型與金鑰</span></span>
+          <span class="task-go">›</span>
+        </button>
+        <div class="card">
+          <div class="card-title">各等級紀錄</div>
+          <div class="progress-list" id="progress-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 戰鬥畫面 ===== -->
+    <section id="screen-battle" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="btn-quit" class="btn-quit">← 離開</button>
+          <span id="hud-level-name"></span>
+        </div>
+        <span id="hud-stage" class="hud-stage"></span>
+        <div class="hud-right">
+          <span id="hud-combo" class="hud-combo"></span>
+          <span id="hud-score" class="hud-score"></span>
+        </div>
+      </div>
+
+      <div id="progress-map" class="progress-map"></div>
+
+      <div id="arena" class="arena">
+        <div class="monster-zone">
+          <span id="monster" class="monster"></span>
+          <div id="monster-name" class="monster-name"></div>
+          <div id="mhp-bar" class="mhp-bar" style="display:none"><div id="mhp-fill" class="mhp-fill" style="width:100%"></div></div>
+        </div>
+        <div class="player-row">
+          <span class="player-avatar">🧝</span>
+          <div class="php-bar"><div id="php-fill" class="php-fill" style="width:100%"></div></div>
+          <span id="php-text" class="php-text">100 / 100</span>
+        </div>
+      </div>
+
+      <div class="question-panel">
+        <span id="q-type-tag" class="q-type-tag"></span>
+        <div id="q-text" class="q-text"></div>
+        <div id="q-hint" class="q-hint"></div>
+        <button id="btn-audio" class="btn-audio">🔊 播放發音</button>
+        <div id="options" class="options"></div>
+        <div id="spell-zone" class="spell-zone" style="display:none">
+          <input id="spell-input" class="spell-input" type="text" autocomplete="off" spellcheck="false" placeholder="輸入英文單字…" />
+          <button id="btn-spell-submit" class="btn-submit">攻擊!</button>
+        </div>
+        <div id="feedback" class="feedback"></div>
+        <div id="feedback-def" class="feedback-def"></div>
+      </div>
+    </section>
+
+    <!-- ===== 跟讀特訓(Shadowing)===== -->
+    <section id="screen-shadow" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="sh-exit" class="btn-quit">← 離開</button>
+          <span id="sh-level"></span>
+        </div>
+        <span id="sh-progress" class="hud-stage"></span>
+      </div>
+      <div class="practice-panel">
+        <div class="steps-tip">1️⃣ 先聽原音 → 2️⃣ 開口跟讀並錄音 → 3️⃣ 比對語調、連音 → 4️⃣ 下一句</div>
+        <div class="chunk-line">
+          <span id="sh-chunk" class="chunk-big"></span>
+          <button id="sh-chunk-play" class="btn-mini-audio">🔊</button>
+        </div>
+        <div id="sh-cn" class="chunk-cn"></div>
+        <div id="sh-def" class="chunk-def"></div>
+        <div id="sh-sentence" class="sentence-box"></div>
+        <div class="shadow-controls">
+          <button id="sh-play" class="btn-audio">▶ 原音</button>
+          <button id="sh-slow" class="btn-audio slow">🐢 慢速</button>
+          <button id="sh-rec" class="btn-audio rec">🎙️ 錄下我的跟讀</button>
+          <button id="sh-myplay" class="btn-audio mine" disabled>👂 聽我的錄音</button>
+        </div>
+        <div id="sh-msg" class="feedback"></div>
+        <div class="practice-actions">
+          <button id="sh-next" class="btn-primary">下一句 →</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 輸出挑戰(聽例句 → 用語塊造句)===== -->
+    <section id="screen-output" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="out-exit" class="btn-quit">← 離開</button>
+          <span id="out-level"></span>
+        </div>
+        <span id="out-progress" class="hud-stage"></span>
+      </div>
+      <div id="out-main" class="practice-panel">
+        <div class="steps-tip">先聽例句(不看字!)→ 再用這個語塊寫出「你自己的」句子</div>
+        <div class="chunk-line"><span id="out-chunk" class="chunk-big"></span></div>
+        <div id="out-cn" class="chunk-cn"></div>
+        <div id="out-def" class="chunk-def"></div>
+        <div class="shadow-controls">
+          <button id="out-play" class="btn-audio">▶ 播例句</button>
+          <button id="out-slow" class="btn-audio slow">🐢 慢速</button>
+        </div>
+        <textarea id="out-input" class="out-input" rows="3" spellcheck="false"
+          placeholder="用上面的語塊造一個自己的句子(至少 6 個字,動詞可變時態)…"></textarea>
+        <div class="practice-actions">
+          <button id="out-submit" class="btn-primary">送出 ⚡</button>
+          <button id="out-next" class="btn-primary" style="display:none">下一題 →</button>
+        </div>
+        <div id="out-fb" class="feedback"></div>
+        <div id="out-reveal" class="reveal-box" style="display:none">
+          <div class="reveal-label">📖 範例原句</div>
+          <div id="out-example" class="sentence-box"></div>
+        </div>
+      </div>
+      <div id="out-finish" class="result-panel" style="display:none">
+        <div class="result-emoji">✍️</div>
+        <div class="result-title win">輸出挑戰完成!</div>
+        <div class="result-stats"><div class="stat">總分<b id="out-final-score"></b></div></div>
+        <div id="out-final-msg" class="game-subtitle"></div>
+        <div class="result-actions">
+          <button id="out-home" class="btn-secondary">回到地圖</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== AI 設定 ===== -->
+    <section id="screen-settings" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="set-exit" class="btn-quit">← 離開</button>
+          <span>⚙️ AI 設定</span>
+        </div>
+        <button id="set-reset" class="btn-quit">↺ 還原預設</button>
+      </div>
+
+      <div class="practice-panel">
+        <div class="set-field">
+          <label class="set-label">AI 供應商</label>
+          <select id="set-provider" class="set-input"></select>
+          <div id="set-apply" class="fb-note"></div>
+        </div>
+
+        <div class="set-field">
+          <label class="set-label">API 端點(不含 /chat/completions)</label>
+          <input id="set-base" class="set-input" type="text" spellcheck="false" placeholder="https://api.example.com/v1" />
+        </div>
+
+        <div class="set-field" id="set-key-row">
+          <label class="set-label">API 金鑰</label>
+          <input id="set-key" class="set-input" type="password" autocomplete="off" spellcheck="false" placeholder="sk-…" />
+        </div>
+
+        <div class="set-field">
+          <label class="set-label">模型名稱</label>
+          <div class="set-row">
+            <input id="set-model" class="set-input" type="text" list="set-model-list" spellcheck="false" placeholder="例:kimi-k2.6" />
+            <button id="set-fetch" class="btn-mini-audio">🔍 取得清單</button>
+          </div>
+          <datalist id="set-model-list"></datalist>
+          <div class="fb-note">可直接輸入任何模型名稱,或點欄位從清單挑選。</div>
+        </div>
+
+        <div class="set-field" id="set-think-row">
+          <label class="ai-autospeak-label">
+            <input type="checkbox" id="set-think"> 🧠 深度思考(講評更細,但每次多等約 5~30 秒)
+          </label>
+        </div>
+
+        <div class="set-actions">
+          <button id="set-test" class="btn-secondary">🧪 測試連線</button>
+          <button id="set-save" class="btn-primary">儲存設定</button>
+        </div>
+        <div id="set-result" class="feedback"></div>
+
+        <div class="fb-note set-privacy">
+          🔒 所有設定(含金鑰)只存在你自己的瀏覽器 localStorage,直接連線該服務,不經任何中介伺服器。<br>
+          這組設定會套用到全部 AI 功能:AI 對話教室、影片口說講評、字幕文法解析。<br>
+          ⚠️ 若服務不允許瀏覽器直連(CORS),測試連線會失敗——請改用支援的服務或在本機執行 Ollama。
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 單字單句本 ===== -->
+    <section id="screen-notebook" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="nb-exit" class="btn-quit">← 離開</button>
+          <span>📒 單字單句本</span>
+        </div>
+      </div>
+      <div class="ls-tabs">
+        <button id="nb-tab-words" class="ls-tab active">📗 單字</button>
+        <button id="nb-tab-sents" class="ls-tab">📘 句子</button>
+      </div>
+      <div class="steps-tip">在課文、影片字幕、名句卡或單字彈窗中點 ⭐ 就會收藏到這裡。句子可 🔊 朗讀與 🎙️ 跟讀挑戰,單字可重聽發音。</div>
+      <div id="nb-list"></div>
+    </section>
+
+    <!-- ===== 看影片學英文 ===== -->
+    <section id="screen-video" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="vd-exit" class="btn-quit">← 離開</button>
+          <span id="vd-title"></span>
+        </div>
+      </div>
+      <div id="vd-frame" class="vd-frame"></div>
+      <div id="vd-controls" class="vd-controls" style="display:none">
+        <button id="vd-back5" class="btn-mini-audio">⏪ 5 秒</button>
+        <button id="vd-play" class="btn-audio vd-playpause">⏸ 暫停</button>
+        <button id="vd-fwd5" class="btn-mini-audio">5 秒 ⏩</button>
+        <button id="vd-speed" class="btn-mini-audio">⚡ 1.0x</button>
+      </div>
+      <div id="vd-loop-bar" class="vd-loop-bar" style="display:none">
+        <span id="vd-loop-text"></span>
+        <button id="vd-loop-stop" class="btn-mini-audio">停止循環</button>
+      </div>
+      <div class="vd-fallback">影片無法播放?<a id="vd-open-yt" href="#" target="_blank" rel="noopener">在 YouTube 開啟 ↗</a></div>
+
+      <div class="card" id="vd-ts-card" style="display:none">
+        <div class="vd-ts-head">
+          <span class="card-title">📜 同步文字稿</span>
+          <label class="ai-autospeak-label"><input type="checkbox" id="vd-follow" checked> 跟隨播放</label>
+        </div>
+        <div class="card-sub">播放時目前句子會亮起;點時間可跳轉、點單字查釋義、點 ✍️ 看文法詞態解析</div>
+        <div id="vd-transcript" class="vd-transcript"></div>
+      </div>
+      <div class="steps-tip">先看影片抓語感 → 對每個名句:🔊 聽發音 → 🎙️ 開口跟讀,AI 逐字比對評分(綠色=唸對、紅色=漏掉/唸錯)→ 🤖 AI 講評給你發音建議。點句中任何單字可查發音與釋義。</div>
+      <div id="vd-sentences"></div>
+    </section>
+
+    <!-- ===== AI 對話教室 ===== -->
+    <section id="screen-ai" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="ai-exit" class="btn-quit">← 離開</button>
+          <span id="ai-level-name"></span>
+        </div>
+        <div class="hud-right">
+          <label class="ai-autospeak-label"><input type="checkbox" id="ai-autospeak" checked> 🔊 自動朗讀</label>
+          <button id="ai-restart" class="btn-quit">↻ 換話題</button>
+          <button id="ai-gear" class="btn-quit">⚙ 設定</button>
+        </div>
+      </div>
+
+      <div id="ai-chat" class="ai-chat"></div>
+
+      <div class="ai-input-row">
+        <button id="ai-mic" class="btn-audio rec ai-mic">🎙️</button>
+        <input id="ai-input" class="spell-input conn-input" type="text" autocomplete="off" placeholder="開口說(按🎙️)或用打字回覆…" />
+        <button id="ai-send" class="btn-submit">送出</button>
+      </div>
+      <div class="ai-mic-row">
+        <span id="ai-mic-level" class="ai-mic-level"></span>
+        <span id="ai-mic-hint" class="fb-note ai-mic-hint">🎙️ 按下說英文,說完會自動送出(說話時可即時看到辨識結果;辨識錯的字往往就是發音要加強的字)。</span>
+      </div>
+    </section>
+
+    <!-- ===== 課程系統 ===== -->
+    <section id="screen-lesson" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="ls-exit" class="btn-quit">← 離開</button>
+          <span id="ls-level"></span>
+        </div>
+        <span id="ls-progress" class="hud-stage"></span>
+      </div>
+      <div id="ls-tabs" class="ls-tabs"></div>
+      <div id="ls-content" class="practice-panel"></div>
+    </section>
+
+    <!-- ===== 商務連音特訓 ===== -->
+    <section id="screen-conn" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="cn-exit" class="btn-quit">← 離開</button>
+          <span>🌊 商務連音特訓</span>
+        </div>
+        <span id="cn-progress" class="hud-stage"></span>
+      </div>
+      <div id="cn-main" class="practice-panel">
+        <div class="steps-tip">聽「自然語速」的會議句 → 把空格處實際聽到的字打出來(用完整拼寫,口語縮寫如 gonna 也算對)</div>
+        <div class="shadow-controls">
+          <button id="cn-play" class="btn-audio">▶ 自然語速</button>
+          <button id="cn-slow" class="btn-audio slow">🐢 慢速</button>
+        </div>
+        <div id="cn-cloze" class="sentence-box cloze"></div>
+        <div class="spell-zone" style="display:flex">
+          <input id="cn-input" class="spell-input conn-input" type="text" autocomplete="off" spellcheck="false" placeholder="輸入空格處聽到的字…" />
+          <button id="cn-submit" class="btn-submit">送出</button>
+        </div>
+        <div id="cn-fb" class="feedback"></div>
+        <div id="cn-reveal" class="reveal-box" style="display:none">
+          <div id="cn-mech" class="mech-badge"></div>
+          <div id="cn-full" class="sentence-box"></div>
+          <div class="conn-detail">
+            <div>🔊 實際聽起來:<b id="cn-phon" class="phon"></b></div>
+            <div id="cn-note" class="conn-note"></div>
+            <div id="cn-cn" class="conn-trans"></div>
+            <div class="conn-shadow-tip">🎤 跟著自然語速唸 3 次,讓嘴巴記住這個節奏!</div>
+          </div>
+          <div class="practice-actions">
+            <button id="cn-next" class="btn-primary">下一句 →</button>
+          </div>
+        </div>
+      </div>
+      <div id="cn-finish" class="result-panel" style="display:none">
+        <div class="result-emoji">🌊</div>
+        <div class="result-title win">連音特訓完成!</div>
+        <div class="result-stats">
+          <div class="stat">得分<b id="cn-final-score"></b></div>
+          <div class="stat">聽寫正確率<b id="cn-final-acc"></b></div>
+        </div>
+        <div id="cn-final-msg" class="game-subtitle"></div>
+        <div class="result-actions">
+          <button id="cn-retry" class="btn-primary">再特訓一次</button>
+          <button id="cn-home" class="btn-secondary">回到地圖</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 母音道場 ===== -->
+    <section id="screen-vowel" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="vw-exit" class="btn-quit">← 離開</button>
+          <span id="vw-name"></span>
+        </div>
+        <span id="vw-progress" class="hud-stage"></span>
+      </div>
+      <div id="vw-main">
+        <div class="vowel-tips">
+          <div class="vtip">
+            <div class="vtip-sym" id="vw-lsym"></div>
+            <div class="vtip-label" id="vw-llabel"></div>
+            <div class="vtip-row">👄 <span id="vw-lmouth"></span></div>
+            <div class="vtip-row">👅 <span id="vw-ltongue"></span></div>
+            <div class="vtip-row tip">💡 <span id="vw-ltip"></span></div>
+          </div>
+          <div class="vtip">
+            <div class="vtip-sym" id="vw-rsym"></div>
+            <div class="vtip-label" id="vw-rlabel"></div>
+            <div class="vtip-row">👄 <span id="vw-rmouth"></span></div>
+            <div class="vtip-row">👅 <span id="vw-rtongue"></span></div>
+            <div class="vtip-row tip">💡 <span id="vw-rtip"></span></div>
+          </div>
+        </div>
+        <div class="practice-panel vowel-quiz">
+          <div class="q-hint">仔細聽,剛剛唸的是哪個字?</div>
+          <button id="vw-play" class="btn-audio">🔊 再聽一次</button>
+          <div class="vw-opts">
+            <button id="vw-opt0" class="opt-btn vw-opt"></button>
+            <button id="vw-opt1" class="opt-btn vw-opt"></button>
+          </div>
+          <div id="vw-fb" class="feedback"></div>
+          <div id="vw-compare" class="vw-compare" style="display:none">
+            <span class="reveal-label">🔁 成對比對:</span>
+            <button id="vw-cmp0" class="btn-mini-audio"></button>
+            <button id="vw-cmp1" class="btn-mini-audio"></button>
+          </div>
+        </div>
+      </div>
+      <div id="vw-finish" class="result-panel" style="display:none">
+        <div class="result-emoji">👂</div>
+        <div class="result-title win">道場修行完成!</div>
+        <div class="result-stats">
+          <div class="stat">得分<b id="vw-final-score"></b></div>
+          <div class="stat">辨音正確率<b id="vw-final-acc"></b></div>
+        </div>
+        <div id="vw-final-msg" class="game-subtitle"></div>
+        <div class="result-actions">
+          <button id="vw-retry" class="btn-primary">再修行一次</button>
+          <button id="vw-home" class="btn-secondary">回到地圖</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== 結算畫面 ===== -->
+    <section id="screen-result" class="screen">
+      <div class="result-panel">
+        <div id="result-emoji" class="result-emoji"></div>
+        <div id="result-title" class="result-title"></div>
+        <div id="result-stars" class="result-stars"></div>
+        <div id="new-record" class="new-record" style="display:none">🎉 新紀錄!</div>
+        <div class="result-stats">
+          <div class="stat">得分<b id="stat-score">0</b></div>
+          <div class="stat">正確率<b id="stat-acc">0%</b></div>
+          <div class="stat">最高連擊<b id="stat-combo">0</b></div>
+        </div>
+        <div id="review-box" class="review-box" style="display:none">
+          <h3>📚 錯題複習(點 🔊 再聽一次發音)</h3>
+          <div id="review-list"></div>
+        </div>
+        <div class="result-actions">
+          <button id="btn-retry" class="btn-primary">再挑戰一次</button>
+          <button id="btn-home" class="btn-secondary">回到地圖</button>
+        </div>
+      </div>
+    </section>
+
+  </div>
+
+  <!-- ===== 底部分頁列 ===== -->
+  <nav id="tabbar">
+    <button class="tab-btn active" data-tab="today"><span class="ti">🏠</span>今日</button>
+    <button class="tab-btn" data-tab="learn"><span class="ti">📚</span>學習</button>
+    <button class="tab-btn" data-tab="coach"><span class="ti">🎯</span>教練</button>
+    <button class="tab-btn" data-tab="explore"><span class="ti">⚔️</span>探索</button>
+    <button class="tab-btn" data-tab="progress"><span class="ti">🏆</span>進度</button>
+  </nav>
+
+  <!-- ===== 單字彈窗 ===== -->
+  <div id="word-modal" class="modal-overlay" style="display:none">
+    <div class="modal-box">
+      <button id="wm-close" class="wm-close">✕</button>
+      <div class="wm-head">
+        <span id="wm-word" class="wm-word"></span>
+        <button id="wm-play" class="btn-mini-audio">🔊</button>
+        <button id="wm-star" class="btn-mini-audio">☆ 收藏</button>
+      </div>
+      <div id="wm-bank" class="wm-bank"></div>
+      <div id="wm-def" class="wm-def"></div>
+      <div class="wm-sec-label">📖 課文例句</div>
+      <div id="wm-sentence" class="wm-sentence"></div>
+    </div>
+  </div>
+
+  <script src="js/words.js?v=2"></script>
+  <script src="js/vowels.js?v=2"></script>
+  <script src="js/connected.js?v=2"></script>
+  <script src="js/lessons.js?v=2"></script>
+  <script src="js/lessons_junior.js?v=2"></script>
+  <script src="js/lessons_senior.js?v=2"></script>
+  <script src="js/lessons_college.js?v=2"></script>
+  <script src="js/lessons_master.js?v=2"></script>
+  <script src="js/lessons_phd.js?v=2"></script>
+  <script src="js/timings.js?v=2"></script>
+  <script src="js/glossary.js?v=2"></script>
+  <script src="js/dictionary.js?v=2"></script>
+  <script src="js/collocations.js?v=2"></script>
+  <script src="js/videos.js?v=2"></script>
+  <script src="js/transcripts.js?v=2"></script>
+  <script src="js/video_sentences.js?v=2"></script>
+  <script src="js/game.js?v=2"></script>
+  <script src="js/ai.js?v=2"></script>
+  <script src="js/notebook.js?v=2"></script>
+  <script src="js/video.js?v=2"></script>
+</body>
+</html>
