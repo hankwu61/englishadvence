@@ -1,0 +1,20 @@
+# Cloudflare Pages 快取規則
+# 語音檔內容固定不變(檔名即內容),可長期快取
+/audio/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# 程式與資料檔已用 ?v= 破除快取,仍保留重新驗證以策安全
+/js/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+/css/*
+  Cache-Control: public, max-age=3600, must-revalidate
+
+# HTML 一律重新驗證,確保改版後立即生效
+/
+  Cache-Control: public, max-age=0, must-revalidate
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+
+/index.html
+  Cache-Control: public, max-age=0, must-revalidate

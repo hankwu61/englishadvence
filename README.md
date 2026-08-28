@@ -146,6 +146,43 @@ python -m http.server 8760
 
 開瀏覽器進 http://localhost:8760(跟讀錄音需要 localhost 或 https 才能使用麥克風)。
 
+## ☁️ 部署到 Cloudflare Pages
+
+本專案是**純靜態網站**,不需要任何建置步驟。
+
+### 方式 A:連接 GitHub(推薦,推送後自動部署)
+
+1. 登入 [dash.cloudflare.com](https://dash.cloudflare.com) → 左側 **Workers & Pages** → **Create** → **Pages** → **Connect to Git**
+2. 授權 GitHub 並選擇 `hankwu61/englishadvence` 這個 repo
+3. 建置設定(**重點:全部留空**):
+
+   | 欄位 | 值 |
+   |---|---|
+   | Framework preset | `None` |
+   | Build command | *(留空)* |
+   | Build output directory | `/` |
+   | Root directory | *(留空)* |
+
+4. 按 **Save and Deploy**,約 1~3 分鐘後即可取得 `https://<專案名>.pages.dev`
+
+之後每次 `git push` 到 `main`,Cloudflare 會自動重新部署。
+
+### 方式 B:Wrangler CLI 直接上傳
+
+```bash
+npx wrangler pages deploy . --project-name=englishadvence
+```
+
+首次執行會開瀏覽器要求登入 Cloudflare 帳號授權。
+
+### 部署後注意事項
+
+- **麥克風可用**:Pages 提供 HTTPS,語音辨識與錄音功能正常(比本機 `file://` 更好)
+- **API 金鑰**:每位訪客各自在 ⚙️ AI 設定填入自己的金鑰,存在各自的瀏覽器,不會外流
+- **同步文字稿**:`js/transcripts.js` 未收錄於 repo,所以部署後**文字稿面板不會顯示**(影片、練習句、口說挑戰等其他功能全部正常)。若要讓線上版也有文字稿,把 `.gitignore` 中的 `js/transcripts.js` 那行移除後重新提交即可——但請注意那是他人影片的完整逐字稿,公開散布前請自行評估
+- **檔案規模**:4,253 個檔案 / 約 110 MB,在 Pages 的上限內(20,000 檔、單檔 25 MB)
+- `_headers` 已設定快取規則:語音檔長期快取、HTML 每次重新驗證
+
 ## 專案結構
 
 | 路徑 | 說明 |
