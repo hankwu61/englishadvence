@@ -4,6 +4,24 @@
 
 Web 版英語冒險 RPG,設計理念參考酷英(coolenglish)學習法:**學語塊不死背單字、英英釋義優先、輸入輸出並重**。發音全部由 **Edge TTS 預錄**,離線可玩，有影片學英文AI口說的功能。
 
+## 📸 畫面預覽
+
+| 📺 探索:影片庫(CEFR 分級 + 主題篩選) | 📜 影片頁:同步文字稿 + 逐句工具 |
+|:--:|:--:|
+| <img src="docs/screenshots/01-explore-videos.png" width="420"> | <img src="docs/screenshots/02-video-transcript.png" width="420"> |
+| 22 支影片依 A2~C2 分級,標示主題與字幕狀態 | 播放時目前句自動亮起,每行都可 🔁 循環 / 🎙️ 挑戰 / ⭐ 收藏 / ✍️ 解析 |
+
+| 📖 課程:課文逐字高亮朗讀 | 🔍 點字彈窗:發音 + 英英釋義 + 例句 |
+|:--:|:--:|
+| <img src="docs/screenshots/03-lesson-passage.png" width="420"> | <img src="docs/screenshots/04-word-popup.png" width="420"> |
+| 朗讀到哪個字就亮到哪(Edge TTS 逐字時間戳) | 離線 WordNet 英英釋義 + 中文 + 課文原句對照 |
+
+### 🤖 AI 對話教室:每一輪都有回饋卡
+
+<img src="docs/screenshots/05-ai-chat.png" width="620">
+
+AI 主動發起話題,你每回覆一次就分析**文法**、**內容切題度**、**發音**(語音輸入時)並給 0–100 分。
+
 ## 📚 課程系統(國中 → 博士,每級 21 課 × 五單元,共 105 課)
 
 每個等級卡片上的「📚 課程 n/21」進入課程列表;每課含五個單元,五單元全完成即「修畢」該課,進度逐課記錄:
