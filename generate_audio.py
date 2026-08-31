@@ -97,6 +97,25 @@ def load_tasks() -> list[tuple[str, str, str]]:
         tasks.append((ex_text, f"s_{s}.mp3", "+0%"))
         tasks.append((ex_text, f"s_{s}_slow.mp3", "-30%"))
 
+
+    # 多益 TOEIC:單字、Part 2 問答(問題=男聲/回應=女聲)、聽力段落(M=Guy、W=Jenny)
+    toeic_path = ROOT / "js" / "toeic_data.js"
+    if toeic_path.exists():
+        tj = toeic_path.read_text(encoding="utf-8")
+        for w in re.findall(r'\{ w: "([A-Za-z]+)"', tj):
+            tasks.append((w, f"{w.lower()}.mp3", "-10%"))
+        p2 = re.search(r"TOEIC_PART2 = \[(.*?)\n\];", tj, re.S)
+        if p2:
+            for i, m2 in enumerate(re.finditer(r'q: "((?:[^"\\]|\\.)*)",\s*r: \[(.*?)\]', p2.group(1), re.S)):
+                tasks.append((m2.group(1), f"t2q_{i}.mp3", "+0%", "en-US-GuyNeural"))
+                for j, resp in enumerate(re.findall(r'"((?:[^"\\]|\\.)*)"', m2.group(2))):
+                    tasks.append((resp, f"t2r_{i}_{j}.mp3", "+0%", "en-US-JennyNeural"))
+        for sm in re.finditer(r'id: "(\w+)", part:.*?lines: \[(.*?)\],\s*questions', tj, re.S):
+            sid, block = sm.group(1), sm.group(2)
+            for k, lm in enumerate(re.finditer(r'\{ sp: "([MW])", en: "((?:[^"\\]|\\.)*)"', block)):
+                v = "en-US-GuyNeural" if lm.group(1) == "M" else "en-US-JennyNeural"
+                tasks.append((lm.group(2), f"t3_{sid}_{k}.mp3", "+0%", v))
+
     # 去重(單字可能跨表重複)
     seen: set[str] = set()
     out = []
@@ -107,14 +126,14 @@ def load_tasks() -> list[tuple[str, str, str]]:
     return out
 
 
-async def gen_one(sem: asyncio.Semaphore, text: str, fname: str, rate: str):
+async def gen_one(sem: asyncio.Semaphore, text: str, fname: str, rate: str, voice: str = VOICE):
     dest = AUDIO_DIR / fname
     if dest.exists() and dest.stat().st_size > 0:
         return None
     async with sem:
         for attempt in range(3):
             try:
-                tts = edge_tts.Communicate(text, VOICE, rate=rate)
+                tts = edge_tts.Communicate(text, voice, rate=rate)
                 await tts.save(str(dest))
                 if dest.stat().st_size > 0:
                     return fname

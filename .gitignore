@@ -14,3 +14,6 @@ js/transcripts.js
 .idea/
 .DS_Store
 Thumbs.db
+
+# Cloudflare Wrangler 本機快取
+.wrangler/

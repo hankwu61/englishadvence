@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>英語冒險王 English Adventure King</title>
-  <link rel="stylesheet" href="css/style.css?v=2" />
+  <link rel="stylesheet" href="css/style.css?v=3" />
 </head>
 <body>
   <div class="stars"></div>
@@ -43,6 +43,13 @@
         <h1 class="tab-title">學習</h1>
         <p class="tab-sub">國中到博士五大等級,每級 21 課:課文・字詞・發音・聽力・文法</p>
         <div id="level-grid" class="level-grid"></div>
+        <div class="dojo-panel" style="margin-top:14px">
+          <div class="dojo-head">💼 多益 TOEIC 專區<small>高頻單字 + Part 2/5 題型 + 雙聲道聽力 + 閱讀測驗,依練習成績預估分數帶</small></div>
+          <div class="conn-start-row">
+            <button id="btn-toeic" class="btn-mode btn-mode-main">進入多益專區</button>
+            <span id="toeic-entry-best" class="dj-best"></span>
+          </div>
+        </div>
       </div>
 
       <!-- 教練 -->
@@ -287,6 +294,18 @@
           ⚠️ 若服務不允許瀏覽器直連(CORS),測試連線會失敗——請改用支援的服務或在本機執行 Ollama。
         </div>
       </div>
+    </section>
+
+    <!-- ===== 多益 TOEIC 專區 ===== -->
+    <section id="screen-toeic" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="toeic-exit" class="btn-quit">← 返回</button>
+          <span>💼 多益 TOEIC</span>
+        </div>
+        <span id="toeic-sub" class="hud-stage"></span>
+      </div>
+      <div id="toeic-content"></div>
     </section>
 
     <!-- ===== 單字單句本 ===== -->
@@ -550,7 +569,9 @@
   <script src="js/videos.js?v=2"></script>
   <script src="js/transcripts.js?v=2"></script>
   <script src="js/video_sentences.js?v=2"></script>
+  <script src="js/toeic_data.js?v=1"></script>
   <script src="js/game.js?v=2"></script>
+  <script src="js/toeic.js?v=1"></script>
   <script src="js/ai.js?v=2"></script>
   <script src="js/notebook.js?v=2"></script>
   <script src="js/video.js?v=2"></script>

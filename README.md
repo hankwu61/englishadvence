@@ -48,6 +48,20 @@ AI 主動發起話題,你每回覆一次就分析**文法**、**內容切題度*
 
 **發音梯度**:國中 phonics 基礎(th、l/r、魔法 e、-ed 三讀…)→ 高中子音母音對比與重音規則 → 大學學術字重音規律(-ic、-ity、-ate…)→ 碩士學術詞彙精準發音(albeit、paradigm…)→ 博士長字重音與外來語(epistemology、zeitgeist /ts/…)。
 
+## 💼 多益 TOEIC 專區(學習分頁 →「進入多益專區」)
+
+依照真實測驗題型設計的五個練習單元,完成任一單元即依平均正確率換算**預估分數與證書色帶**(橘/棕/綠/藍/金):
+
+| 單元 | 內容 |
+|---|---|
+| 🗂️ 高頻單字 | 6 大商務主題(辦公室、人事、會議、財務、商務行銷、出差旅遊)× 10 字,附詞性與中文;點字聽發音、點 ⭐ 收藏到單字單句本,背完做 10 題隨機測驗 |
+| 🎧 Part 2 應答問題 | 男聲念問題(可重播),從三個女聲回應中選最合適的;每個選項都能單獨點 🔊 重聽,答完顯示考點解析(8 題/輪) |
+| ✏️ Part 5 句子填空 | 文法與詞彙選擇題,涵蓋時態、詞性變化、介係詞搭配、連接詞等多益常考點(10 題/輪,附解析) |
+| 🗣️ Part 3・4 對話與獨白 | 2 組雙聲道商務對話 + 2 段廣播獨白(👨 男聲 en-US-GuyNeural / 👩 女聲 en-US-JennyNeural 交錯),**邊聽邊作答**(實戰技巧),作答後才揭露逐句文字稿,每行可單獨重聽 |
+| 📄 Part 7 閱讀測驗 | 商務書信、公司公告、廣告與行程表四篇,**文中每個單字都可點擊**查發音與英英釋義,附理解題與解析 |
+
+各單元最佳成績分開記錄,學習分頁的入口卡片會即時顯示目前預估分數。
+
 ## 遊戲模式(每個難度等級皆有)
 
 ### ⚔️ 冒險模式(輸入)
@@ -239,11 +253,13 @@ npx wrangler pages deploy . --project-name=englishadvence
 | `build_dictionary.py` | 離線詞典建置腳本(nltk / WordNet)|
 | `generate_timings.py` | 重產課文音檔並擷取 WordBoundary 時間戳(需 `boundary="WordBoundary"`)|
 | `js/collocations.js` | 五級語塊庫(各 15 組,含英英釋義與例句)|
+| `js/toeic_data.js` | 多益題庫(60 高頻字、16 題 Part 2、24 題 Part 5、4 組聽力、4 篇閱讀)|
+| `js/toeic.js` | 多益專區邏輯(五單元流程、雙聲道播放、分數帶預估)|
 | `js/game.js` | 遊戲邏輯 |
-| `audio/` | 4,224 個預錄音檔(見下)|
+| `audio/` | 4,344 個預錄音檔(見下)|
 | `generate_audio.py` | Edge TTS 語音產生腳本 |
 
-## 語音檔規則(Edge TTS,en-US-JennyNeural)
+## 語音檔規則(Edge TTS,女聲 en-US-JennyNeural / 男聲 en-US-GuyNeural)
 
 | 檔名 | 內容 | 語速 |
 |---|---|---|
@@ -251,6 +267,9 @@ npx wrangler pages deploy . --project-name=englishadvence
 | `c_<slug>.mp3` | 語塊 | -10% |
 | `s_<slug>.mp3` | 例句(原速)| +0% |
 | `s_<slug>_slow.mp3` | 例句(慢速,跟讀用)| -30% |
+| `t2q_<i>.mp3` | 多益 Part 2 問題(**男聲**)| +0% |
+| `t2r_<i>_<j>.mp3` | 多益 Part 2 回應選項(女聲)| +0% |
+| `t3_<setId>_<k>.mp3` | 多益 Part 3・4 逐句(依 `sp` 欄位切換男/女聲)| +0% |
 
 新增或修改字庫後執行 `python generate_audio.py` 補產(需 `pip install edge-tts`,已存在的檔案自動跳過)。修改課文後,另需執行 `python generate_timings.py` 重產課文音檔與逐字時間戳(兩者在同一串流中產生,保證高亮同步)。
 
