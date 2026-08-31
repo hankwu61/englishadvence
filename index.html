@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>英語冒險王 English Adventure King</title>
-  <link rel="stylesheet" href="css/style.css?v=3" />
+  <link rel="stylesheet" href="css/style.css?v=4" />
 </head>
 <body>
   <div class="stars"></div>
@@ -48,6 +48,13 @@
           <div class="conn-start-row">
             <button id="btn-toeic" class="btn-mode btn-mode-main">進入多益專區</button>
             <span id="toeic-entry-best" class="dj-best"></span>
+          </div>
+        </div>
+        <div class="dojo-panel" style="margin-top:14px">
+          <div class="dojo-head">🎓 托福 TOEFL 專區<small>學術字彙 + 學術閱讀 + 校園聽力 + 計時口說 + 學術寫作,預估四大分項與總分</small></div>
+          <div class="conn-start-row">
+            <button id="btn-toefl" class="btn-mode btn-mode-main">進入托福專區</button>
+            <span id="toefl-entry-best" class="dj-best"></span>
           </div>
         </div>
       </div>
@@ -306,6 +313,18 @@
         <span id="toeic-sub" class="hud-stage"></span>
       </div>
       <div id="toeic-content"></div>
+    </section>
+
+    <!-- ===== 托福 TOEFL 專區 ===== -->
+    <section id="screen-toefl" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="toefl-exit" class="btn-quit">← 返回</button>
+          <span>🎓 托福 TOEFL</span>
+        </div>
+        <span id="toefl-sub" class="hud-stage"></span>
+      </div>
+      <div id="toefl-content"></div>
     </section>
 
     <!-- ===== 單字單句本 ===== -->
@@ -570,8 +589,10 @@
   <script src="js/transcripts.js?v=2"></script>
   <script src="js/video_sentences.js?v=2"></script>
   <script src="js/toeic_data.js?v=1"></script>
+  <script src="js/toefl_data.js?v=1"></script>
   <script src="js/game.js?v=2"></script>
   <script src="js/toeic.js?v=1"></script>
+  <script src="js/toefl.js?v=1"></script>
   <script src="js/ai.js?v=2"></script>
   <script src="js/notebook.js?v=2"></script>
   <script src="js/video.js?v=2"></script>

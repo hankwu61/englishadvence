@@ -116,6 +116,26 @@ def load_tasks() -> list[tuple[str, str, str]]:
                 v = "en-US-GuyNeural" if lm.group(1) == "M" else "en-US-JennyNeural"
                 tasks.append((lm.group(2), f"t3_{sid}_{k}.mp3", "+0%", v))
 
+
+    # 托福 TOEFL:學術字彙、聽力逐句(M=Guy、W=Jenny)、口說示範回答、閱讀文章逐字
+    toefl_path = ROOT / "js" / "toefl_data.js"
+    if toefl_path.exists():
+        fj = toefl_path.read_text(encoding="utf-8")
+        for w in re.findall(r'\{ w: "([A-Za-z]+)"', fj):
+            tasks.append((w, f"{w.lower()}.mp3", "-10%"))
+        for sm in re.finditer(r'id: "(\w+)", kind:.*?lines: \[(.*?)\],\s*questions', fj, re.S):
+            sid, block = sm.group(1), sm.group(2)
+            for k, lm in enumerate(re.finditer(r'\{ sp: "([MW])", en: "((?:[^"\\]|\\.)*)"', block)):
+                v = "en-US-GuyNeural" if lm.group(1) == "M" else "en-US-JennyNeural"
+                tasks.append((lm.group(2).replace('\\"', '"'), f"tf3_{sid}_{k}.mp3", "+0%", v))
+        for sm in re.finditer(r'id: "(sp\d+)".*?sample: "((?:[^"\\]|\\.)*)"', fj, re.S):
+            tasks.append((sm.group(2).replace('\\"', '"'), f"tfs_{sm.group(1)}.mp3", "+0%"))
+        for pm in re.finditer(r'id: "(rd\d+)".*?text: "((?:[^"\\]|\\.)*)"', fj, re.S):
+            text = pm.group(2).replace("\\n", " ").replace('\\"', '"')
+            for token in re.findall(r"[A-Za-z][A-Za-z']*", text):
+                token = token.rstrip("'").lower()
+                tasks.append((token, f"{token}.mp3", "-10%"))
+
     # 去重(單字可能跨表重複)
     seen: set[str] = set()
     out = []

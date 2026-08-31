@@ -1002,11 +1002,11 @@ select.set-input { cursor: pointer; }
 }
 
 /* ============ 多益 TOEIC 專區 ============ */
-.toeic-band { border-left: 6px solid var(--line); }
+.toeic-band, .toefl-band { border-left: 6px solid var(--line); }
 .tb-score { font-size: 2rem; font-weight: 900; }
 .tb-score small { font-size: 0.95rem; color: var(--muted); font-weight: 600; }
 .tb-band { margin-top: 2px; font-size: 0.95rem; }
-.toeic-best { color: var(--gold); font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+.toeic-best, .toefl-best { color: var(--gold); font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
 
 .tv-words { display: flex; flex-wrap: wrap; gap: 8px; }
 .tv-word { display: inline-flex; align-items: center; gap: 2px; }
@@ -1042,3 +1042,68 @@ select.set-input { cursor: pointer; }
 .tlc-en { flex: 1; }
 
 .tp7-text { white-space: normal; }
+
+/* ============ 托福 TOEFL 專區 ============ */
+.tfl-secgrid {
+  display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px;
+  margin: 12px 0 4px;
+}
+.tfl-sec {
+  background: var(--bg); border-radius: 12px; padding: 8px 4px;
+  text-align: center;
+}
+.tfl-sec span { display: block; font-size: 0.72rem; color: var(--muted); font-weight: 600; }
+.tfl-sec b { font-size: 1.25rem; font-weight: 900; }
+
+.tfl-field {
+  display: inline-block; font-size: 0.78rem; font-weight: 700;
+  color: var(--primary); background: var(--primary-soft);
+  border-radius: 999px; padding: 3px 12px; margin-bottom: 10px;
+}
+.tfl-qtype {
+  display: inline-block; font-size: 0.7rem; font-weight: 800;
+  color: #0B7FA8; background: var(--sky-soft);
+  border-radius: 6px; padding: 2px 7px; margin-right: 6px;
+  vertical-align: 1px;
+}
+
+.tfl-prompt {
+  background: var(--primary-soft); border-radius: 14px;
+  padding: 14px 16px; margin-bottom: 12px;
+}
+.tfl-prompt-en { font-size: 1rem; line-height: 1.65; font-weight: 600; }
+.tfl-who { font-size: 0.8rem; font-weight: 800; color: var(--primary); margin-bottom: 4px; }
+.tfl-op {
+  background: var(--bg); border-left: 4px solid var(--line);
+  border-radius: 12px; padding: 12px 14px; margin-bottom: 10px;
+  font-size: 0.92rem; line-height: 1.6;
+}
+.tfl-op .tfl-who { color: var(--muted); }
+
+.tfl-timer {
+  text-align: center; font-size: 1.1rem; font-weight: 800;
+  background: var(--bg); border-radius: 14px; padding: 16px;
+  margin: 12px 0; letter-spacing: 0.5px;
+}
+.tfl-timer.prep { background: var(--gold-soft); color: #A16509; }
+.tfl-timer.rec { background: var(--bad-soft); color: var(--bad); }
+.tfl-timer.rec.warn { animation: pulse 0.6s infinite alternate; }
+
+.tfl-editor {
+  width: 100%; border: 1.5px solid var(--line); border-radius: 14px;
+  padding: 12px 14px; font-family: inherit; font-size: 0.95rem; line-height: 1.7;
+  color: var(--ink); background: var(--card); resize: vertical;
+}
+.tfl-editor:focus { outline: none; border-color: var(--primary); }
+.tfl-count { text-align: right; font-size: 0.8rem; color: var(--muted); margin-top: 4px; }
+
+.tfl-metrics { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0; }
+.tfl-metric {
+  background: var(--bg); border-radius: 10px; padding: 7px 12px;
+  font-size: 0.82rem; font-weight: 700; color: var(--ink);
+}
+.tfl-metric i { display: block; font-style: normal; font-weight: 500; font-size: 0.72rem; color: var(--muted); }
+
+@media (max-width: 420px) {
+  .tfl-secgrid { grid-template-columns: repeat(2, 1fr); }
+}
