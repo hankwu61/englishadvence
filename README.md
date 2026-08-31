@@ -1,6 +1,6 @@
 # ⚔️ 英語冒險王 English Adventure King
 
-### 🌐 線上試玩 → **[5d56c3a6.englishadvence.pages.dev](https://5d56c3a6.englishadvence.pages.dev/)**
+### 🌐 線上試玩 → **[c0205593.englishadvence.pages.dev](https://c0205593.englishadvence.pages.dev/)**
 
 免安裝,打開瀏覽器就能用(建議 Chrome / Edge,語音辨識與麥克風需要)。
 課程、單字冒險、母音道場、連音特訓、影片跟讀等功能**開箱即用**;
