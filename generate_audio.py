@@ -180,6 +180,17 @@ def load_tasks() -> list[tuple[str, str, str]]:
             if key:
                 tasks.append((w, f"{key}.mp3", "-10%"))
 
+
+    # 多益 Part 1 照片描述:每題四句,同一題用同一位說話者(voice: M/W)
+    p1_path = ROOT / "js" / "toeic_part1.js"
+    if p1_path.exists():
+        pj = p1_path.read_text(encoding="utf-8")
+        for pm in re.finditer(r'id: "(\w+)", title: "[^"]*", voice: "([MW])".*?opts: \[(.*?)\],\s*why', pj, re.S):
+            pid, voice, block = pm.group(1), pm.group(2), pm.group(3)
+            v = "en-US-GuyNeural" if voice == "M" else "en-US-JennyNeural"
+            for j, sm in enumerate(re.findall(r'"((?:[^"\\]|\\.)*)"', block)):
+                tasks.append((sm.replace('\\"', '"'), f"t1_{pid}_{j}.mp3", "+0%", v))
+
     # 去重(單字可能跨表重複)
     seen: set[str] = set()
     out = []

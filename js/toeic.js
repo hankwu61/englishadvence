@@ -22,6 +22,7 @@ function toeicSave(key, pct) {
 function toeicEstimate() {
   const d = toeicData();
   const parts = [];
+  if (d.p1 !== undefined) parts.push(d.p1);
   if (d.p2 !== undefined) parts.push(d.p2);
   if (d.p5 !== undefined) parts.push(d.p5);
   if (d.voc !== undefined) parts.push(d.voc);
@@ -94,9 +95,10 @@ function renderToeicHub() {
   const parts = [
     { icon: "📚", t: "13 大情境課文", s: "官方歸納的職場與生活情境,朗讀跟讀 + 理解測驗", b: `完成 ${scDone}/${TOEIC_SCENES.length} 篇`, go: renderToeicSceneList },
     { icon: "📕", t: "13 大主題字彙庫", s: `${vcTotal} 個必考字:同反義字、片語、解析、字根圖解`, b: `測驗 ${vcDone}/${TOEIC_VOCAB.length} 主題`, go: renderToeicVocabList },
+    { icon: "📷", t: "Part 1 照片描述", s: "看圖聽四句描述,選出最貼切的(6 題/輪)", b: best("p1"), go: startToeicP1 },
     { icon: "🎧", t: "Part 2 應答問題", s: "聽問題,選出最合適的回應(8 題/輪)", b: best("p2"), go: startToeicP2 },
-    { icon: "✏️", t: "Part 5 句子填空", s: "文法與詞彙選擇題(10 題/輪)", b: best("p5"), go: startToeicP5 },
     { icon: "🗣️", t: "Part 3・4 對話與獨白", s: "雙聲道對話 + 廣播獨白,聽完答題", b: `完成 ${lcDone}/${TOEIC_LC.length} 組`, go: renderToeicLCList },
+    { icon: "✏️", t: "Part 5 句子填空", s: "文法與詞彙選擇題(10 題/輪)", b: best("p5"), go: startToeicP5 },
     { icon: "📄", t: "Part 7 閱讀測驗", s: "商務書信、公告、廣告閱讀", b: `完成 ${p7Done}/${TOEIC_PART7.length} 篇`, go: renderToeicP7List },
   ];
   const box = $("#toeic-parts");

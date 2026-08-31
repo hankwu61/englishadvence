@@ -1290,3 +1290,42 @@ select.set-input { cursor: pointer; }
 .vc-legend i.vc-chip.pre { background: var(--primary); }
 .vc-legend i.vc-chip.root { background: var(--accent); }
 .vc-legend i.vc-chip.suf { background: var(--sky); }
+
+/* ============ 多益 Part 1 照片描述 ============ */
+.p1-photo {
+  border-radius: 14px; overflow: hidden; margin-bottom: 12px;
+  border: 1px solid var(--line); box-shadow: var(--shadow);
+  background: var(--card);
+}
+.p1-svg { display: block; width: 100%; height: auto; }
+
+.p1-opts { display: grid; gap: 8px; margin-bottom: 10px; }
+.p1-opt {
+  display: grid;
+  grid-template-columns: auto auto 1fr;
+  grid-template-areas: "pick listen text" ". . why";
+  align-items: center; gap: 8px;
+  background: var(--card); border: 1.5px solid var(--line);
+  border-radius: 12px; padding: 8px 12px;
+  transition: border-color 0.15s, background 0.15s;
+}
+.p1-opt.now { border-color: var(--primary); background: var(--primary-soft); }
+.p1-opt.correct { border-color: var(--good); background: var(--good-soft); }
+.p1-opt.wrong { border-color: var(--bad); background: var(--bad-soft); }
+.p1-opt.dim { opacity: 0.6; }
+.p1-pick {
+  grid-area: pick;
+  width: 38px; height: 38px; border-radius: 10px;
+  border: none; background: var(--bg); color: var(--ink);
+  font-family: inherit; font-size: 1rem; font-weight: 800; cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.p1-pick:hover:not(:disabled) { background: var(--primary); color: #fff; }
+.p1-pick:disabled { cursor: default; }
+.p1-opt.correct .p1-pick { background: var(--good); color: #fff; }
+.p1-opt.wrong .p1-pick { background: var(--bad); color: #fff; }
+.p1-listen { grid-area: listen; }
+.p1-text { grid-area: text; font-size: 0.92rem; line-height: 1.5; }
+.p1-why { grid-area: why; font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+.p1-why:empty, .p1-text:empty { display: none; }
+.p1-img { display: block; width: 100%; height: auto; aspect-ratio: 8 / 5; object-fit: cover; }
