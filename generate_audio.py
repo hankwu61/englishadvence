@@ -136,6 +136,26 @@ def load_tasks() -> list[tuple[str, str, str]]:
                 token = token.rstrip("'").lower()
                 tasks.append((token, f"{token}.mp3", "-10%"))
 
+
+    # 雅思 IELTS:核心字彙、聽力逐句(M=Guy、W=Jenny)、Part 2 示範回答、閱讀文章逐字
+    ielts_path = ROOT / "js" / "ielts_data.js"
+    if ielts_path.exists():
+        ij = ielts_path.read_text(encoding="utf-8")
+        for w in re.findall(r'\{ w: "([A-Za-z]+)"', ij):
+            tasks.append((w, f"{w.lower()}.mp3", "-10%"))
+        for sm in re.finditer(r'id: "(\w+)", section:.*?lines: \[(.*?)\],\s*questions', ij, re.S):
+            sid, block = sm.group(1), sm.group(2)
+            for k, lm in enumerate(re.finditer(r'\{ sp: "([MW])", en: "((?:[^"\\]|\\.)*)"', block)):
+                v = "en-US-GuyNeural" if lm.group(1) == "M" else "en-US-JennyNeural"
+                tasks.append((lm.group(2).replace('\\"', '"'), f"ie3_{sid}_{k}.mp3", "+0%", v))
+        for sm in re.finditer(r'id: "(cue\d+)".*?sample: "((?:[^"\\]|\\.)*)"', ij, re.S):
+            tasks.append((sm.group(2).replace('\\"', '"'), f"ies_{sm.group(1)}.mp3", "+0%"))
+        for pm in re.finditer(r'id: "(ir\d+)".*?text: "((?:[^"\\]|\\.)*)"', ij, re.S):
+            text = pm.group(2).replace("\\n", " ").replace('\\"', '"')
+            for token in re.findall(r"[A-Za-z][A-Za-z']*", text):
+                token = token.rstrip("'").lower()
+                tasks.append((token, f"{token}.mp3", "-10%"))
+
     # 去重(單字可能跨表重複)
     seen: set[str] = set()
     out = []

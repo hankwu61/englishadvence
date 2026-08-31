@@ -1002,11 +1002,11 @@ select.set-input { cursor: pointer; }
 }
 
 /* ============ 多益 TOEIC 專區 ============ */
-.toeic-band, .toefl-band { border-left: 6px solid var(--line); }
+.toeic-band, .toefl-band, .ielts-band { border-left: 6px solid var(--line); }
 .tb-score { font-size: 2rem; font-weight: 900; }
 .tb-score small { font-size: 0.95rem; color: var(--muted); font-weight: 600; }
 .tb-band { margin-top: 2px; font-size: 0.95rem; }
-.toeic-best, .toefl-best { color: var(--gold); font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
+.toeic-best, .toefl-best, .ielts-best { color: var(--gold); font-size: 0.78rem; font-weight: 700; white-space: nowrap; }
 
 .tv-words { display: flex; flex-wrap: wrap; gap: 8px; }
 .tv-word { display: inline-flex; align-items: center; gap: 2px; }
@@ -1107,3 +1107,64 @@ select.set-input { cursor: pointer; }
 @media (max-width: 420px) {
   .tfl-secgrid { grid-template-columns: repeat(2, 1fr); }
 }
+
+/* ============ 雅思 IELTS 專區 ============ */
+/* True / False / Not Given:三選項固定順序,橫向排列 */
+.ie-tfng { grid-template-columns: repeat(3, 1fr); }
+@media (max-width: 480px) { .ie-tfng { grid-template-columns: 1fr; } }
+
+/* 填空題 */
+.ie-gaprow { display: flex; gap: 8px; align-items: center; margin-top: 8px; }
+.ie-gap {
+  flex: 1; min-width: 0;
+  border: 1.5px solid var(--line); border-radius: 12px;
+  padding: 10px 14px; font-family: inherit; font-size: 0.95rem; color: var(--ink);
+  background: var(--card);
+}
+.ie-gap:focus { outline: none; border-color: var(--primary); }
+.ie-gap.ok { border-color: var(--good); background: var(--good-soft); font-weight: 700; }
+.ie-gap.miss { border-color: var(--bad); background: var(--bad-soft); font-weight: 700; }
+.ie-gapbtn { padding: 10px 18px; font-size: 0.88rem; flex-shrink: 0; }
+
+/* Cue card */
+.ie-cuecard {
+  background: var(--card); border: 2px dashed var(--primary);
+  border-radius: 16px; padding: 16px 18px; margin-bottom: 12px;
+}
+.ie-cue-title { font-size: 1.05rem; font-weight: 800; line-height: 1.5; }
+.ie-cue-sub { color: var(--muted); font-size: 0.85rem; margin: 8px 0 4px; font-weight: 600; }
+.ie-cue-list { margin: 0 0 10px 20px; }
+.ie-cue-list li { font-size: 0.95rem; line-height: 1.8; }
+
+/* Task 1 圖表 */
+.ie-chart {
+  background: var(--card); border: 1px solid var(--line);
+  border-radius: 16px; padding: 16px 14px 12px; margin-bottom: 12px;
+  overflow-x: auto;
+}
+.ie-legend {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: center;
+  font-size: 0.8rem; font-weight: 700; color: var(--ink); margin-bottom: 14px;
+}
+.ie-legend i { display: inline-block; width: 12px; height: 12px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
+.ie-legend .ie-unit { color: var(--muted); font-weight: 500; margin-left: auto; }
+.ie-bars {
+  display: flex; justify-content: space-around; align-items: flex-end;
+  gap: 10px; min-height: 170px; padding-bottom: 4px;
+  border-bottom: 2px solid var(--line);
+}
+.ie-cat { flex: 1; min-width: 62px; text-align: center; }
+.ie-bargroup { display: flex; align-items: flex-end; justify-content: center; gap: 4px; height: 140px; }
+.ie-bar {
+  flex: 1; max-width: 26px; border-radius: 4px 4px 0 0;
+  position: relative; display: flex; justify-content: center;
+}
+.ie-bar span {
+  position: absolute; top: -17px;
+  font-size: 0.7rem; font-weight: 800; color: var(--ink);
+}
+.ie-catlabel { margin-top: 8px; font-size: 0.78rem; font-weight: 700; color: var(--muted); }
+.ie-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 0.82rem; }
+.ie-table th, .ie-table td { border: 1px solid var(--line); padding: 5px 8px; text-align: center; }
+.ie-table th { background: var(--bg); color: var(--muted); font-weight: 700; }
+.ie-table td:first-child { text-align: left; font-weight: 700; }

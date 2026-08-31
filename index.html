@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>英語冒險王 English Adventure King</title>
-  <link rel="stylesheet" href="css/style.css?v=4" />
+  <link rel="stylesheet" href="css/style.css?v=5" />
 </head>
 <body>
   <div class="stars"></div>
@@ -55,6 +55,13 @@
           <div class="conn-start-row">
             <button id="btn-toefl" class="btn-mode btn-mode-main">進入托福專區</button>
             <span id="toefl-entry-best" class="dj-best"></span>
+          </div>
+        </div>
+        <div class="dojo-panel" style="margin-top:14px">
+          <div class="dojo-head">🌏 雅思 IELTS 專區<small>核心字彙 + 聽力填空 + True/False/Not Given + Part 2 口說 + Task 1/2 寫作,預估 Band 分數</small></div>
+          <div class="conn-start-row">
+            <button id="btn-ielts" class="btn-mode btn-mode-main">進入雅思專區</button>
+            <span id="ielts-entry-best" class="dj-best"></span>
           </div>
         </div>
       </div>
@@ -327,6 +334,18 @@
       <div id="toefl-content"></div>
     </section>
 
+    <!-- ===== 雅思 IELTS 專區 ===== -->
+    <section id="screen-ielts" class="screen">
+      <div class="battle-hud">
+        <div class="hud-left">
+          <button id="ielts-exit" class="btn-quit">← 返回</button>
+          <span>🌏 雅思 IELTS</span>
+        </div>
+        <span id="ielts-sub" class="hud-stage"></span>
+      </div>
+      <div id="ielts-content"></div>
+    </section>
+
     <!-- ===== 單字單句本 ===== -->
     <section id="screen-notebook" class="screen">
       <div class="battle-hud">
@@ -590,9 +609,11 @@
   <script src="js/video_sentences.js?v=2"></script>
   <script src="js/toeic_data.js?v=1"></script>
   <script src="js/toefl_data.js?v=1"></script>
+  <script src="js/ielts_data.js?v=1"></script>
   <script src="js/game.js?v=2"></script>
   <script src="js/toeic.js?v=1"></script>
   <script src="js/toefl.js?v=1"></script>
+  <script src="js/ielts.js?v=1"></script>
   <script src="js/ai.js?v=2"></script>
   <script src="js/notebook.js?v=2"></script>
   <script src="js/video.js?v=2"></script>

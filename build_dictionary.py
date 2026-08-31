@@ -229,7 +229,7 @@ def load_tokens() -> set[str]:
             for tok in re.findall(r"[A-Za-z][A-Za-z']*", en):
                 tokens.add(tok.rstrip("'").lower())
     # 影片字幕 + 擷取名句的單字(同步文字稿點字用)
-    for name in ("transcripts.js", "video_sentences.js", "toeic_data.js", "toefl_data.js"):
+    for name in ("transcripts.js", "video_sentences.js", "toeic_data.js", "toefl_data.js", "ielts_data.js"):
         p = ROOT / "js" / name
         if p.exists():
             t = p.read_text(encoding="utf-8")

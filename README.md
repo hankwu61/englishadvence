@@ -76,6 +76,20 @@ AI 主動發起話題,你每回覆一次就分析**文法**、**內容切題度*
 
 口說與寫作皆可按 **🤖 AI 講評**,由「設定」分頁所選的 AI 供應商依 TOEFL 級距給分並指出具體修改建議。
 
+## 🌏 雅思 IELTS 專區(學習分頁 →「進入雅思專區」)
+
+Academic 學術組。四大分項各自換算 **Band 0–9**,總分取平均後四捨五入至 0.5:
+
+| 單元 | 內容 |
+|---|---|
+| 🔤 核心字彙 | 6 大主題(圖表趨勢、環境永續、教育議題、科技社會、健康醫療、都市與交通)× 10 字,與多益/托福字庫不重複;「圖表趨勢」組直接對應 Task 1 用語 |
+| 🎧 Listening 填空與選擇 | Section 1–4(社交對話、獨白、學術討論、講座),**表格填空題 + 選擇題混合**;填空需照原文拼字,作答後揭露逐字稿可逐句精聽 |
+| 📖 Reading 判斷題 | 3 篇學術文章,雅思招牌題型 **True / False / Not Given**(三選項固定順序)+ 句子填空(ONE WORD ONLY);每題附判斷理由,文中單字可點擊查釋義 |
+| 🗣️ Speaking Part 2 | 4 張 Cue Card,**1 分鐘準備 + 2 分鐘獨白**計時;依說話長度、bullet 涵蓋、連貫語自動評分,並附示範回答音檔與 Part 3 延伸問題 |
+| ✍️ Writing Task 1・2 | Task 1 圖表描述(150 字,**內建長條圖與數據表**)× 2 + Task 2 議論文(250 字)× 2;Task 1 檢核 overview 段、數據引用與比較語言,Task 2 檢核立場、雙方論點、例子與連接詞 |
+
+正確率依 Academic 換算表落點對應 Band(75% ≈ 7.0、58% ≈ 6.0),口說與寫作可按 **🤖 AI 講評**,由 AI 依四項評分標準給 Band 並指出具體修改處。
+
 ## 遊戲模式(每個難度等級皆有)
 
 ### ⚔️ 冒險模式(輸入)
@@ -271,8 +285,10 @@ npx wrangler pages deploy . --project-name=englishadvence
 | `js/toeic.js` | 多益專區邏輯(五單元流程、雙聲道播放、分數帶預估)|
 | `js/toefl_data.js` | 托福題庫(60 學術字、4 篇學術閱讀、4 組聽力、4 題口說、2 題寫作)|
 | `js/toefl.js` | 托福專區邏輯(四大分項、計時口說評分、寫作檢核、AI 講評)|
+| `js/ielts_data.js` | 雅思題庫(60 核心字、3 篇判斷題閱讀、4 組聽力、4 張 Cue Card、4 題寫作)|
+| `js/ielts.js` | 雅思專區邏輯(TFNG/填空作答器、Band 換算、Task 1 圖表繪製、寫作檢核)|
 | `js/game.js` | 遊戲邏輯 |
-| `audio/` | 4,590 個預錄音檔(見下)|
+| `audio/` | 4,771 個預錄音檔(見下)|
 | `generate_audio.py` | Edge TTS 語音產生腳本 |
 
 ## 語音檔規則(Edge TTS,女聲 en-US-JennyNeural / 男聲 en-US-GuyNeural)
@@ -288,6 +304,8 @@ npx wrangler pages deploy . --project-name=englishadvence
 | `t3_<setId>_<k>.mp3` | 多益 Part 3・4 逐句(依 `sp` 欄位切換男/女聲)| +0% |
 | `tf3_<setId>_<k>.mp3` | 托福聽力逐句(依 `sp` 欄位切換男/女聲)| +0% |
 | `tfs_<taskId>.mp3` | 托福口說示範回答 | +0% |
+| `ie3_<setId>_<k>.mp3` | 雅思聽力逐句(依 `sp` 欄位切換男/女聲)| +0% |
+| `ies_<cueId>.mp3` | 雅思 Part 2 示範回答 | +0% |
 
 新增或修改字庫後執行 `python generate_audio.py` 補產(需 `pip install edge-tts`,已存在的檔案自動跳過)。修改課文後,另需執行 `python generate_timings.py` 重產課文音檔與逐字時間戳(兩者在同一串流中產生,保證高亮同步)。
 
