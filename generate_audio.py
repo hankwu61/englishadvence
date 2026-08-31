@@ -171,6 +171,15 @@ def load_tasks() -> list[tuple[str, str, str]]:
                 token = token.rstrip("'").lower()
                 tasks.append((token, f"{token}.mp3", "-10%"))
 
+
+    # 多益 13 大主題字彙庫:每個必考字的發音(片語與例句在畫面上以 TTS 備援)
+    for vf in sorted((ROOT / "js").glob("toeic_vocab[0-9].js")):
+        vj = vf.read_text(encoding="utf-8")
+        for w in re.findall(r'\{ w: "([A-Za-z][A-Za-z \-]*)"', vj):
+            key = re.sub(r"[^a-z]", "", w.lower())
+            if key:
+                tasks.append((w, f"{key}.mp3", "-10%"))
+
     # 去重(單字可能跨表重複)
     seen: set[str] = set()
     out = []

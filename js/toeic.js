@@ -31,6 +31,8 @@ function toeicEstimate() {
   if (p7.length) parts.push(p7.reduce((a, b) => a + b, 0) / p7.length);
   const sc = TOEIC_SCENES.map((s) => d["sc_" + s.id]).filter((x) => x !== undefined);
   if (sc.length) parts.push(sc.reduce((a, b) => a + b, 0) / sc.length);
+  const vc = TOEIC_VOCAB.map((t) => d["vc_" + t.id]).filter((x) => x !== undefined);
+  if (vc.length) parts.push(vc.reduce((a, b) => a + b, 0) / vc.length);
   if (!parts.length) return null;
   const pct = parts.reduce((a, b) => a + b, 0) / parts.length;
   const score = Math.round((pct / 100) * 990 / 5) * 5;
@@ -86,10 +88,12 @@ function renderToeicHub() {
     </div>
     <div id="toeic-parts"></div>`;
 
+  const vcTotal = TOEIC_VOCAB.reduce((a, t) => a + t.list.length, 0);
+  const vcDone = TOEIC_VOCAB.filter((t) => d["vc_" + t.id] !== undefined).length;
   const scDone = TOEIC_SCENES.filter((s) => d["sc_" + s.id] !== undefined).length;
   const parts = [
     { icon: "📚", t: "13 大情境課文", s: "官方歸納的職場與生活情境,朗讀跟讀 + 理解測驗", b: `完成 ${scDone}/${TOEIC_SCENES.length} 篇`, go: renderToeicSceneList },
-    { icon: "🗂️", t: "高頻單字", s: "6 大商務主題 × 10 字,附測驗", b: best("voc"), go: renderToeicVoc },
+    { icon: "📕", t: "13 大主題字彙庫", s: `${vcTotal} 個必考字:同反義字、片語、解析、字根圖解`, b: `測驗 ${vcDone}/${TOEIC_VOCAB.length} 主題`, go: renderToeicVocabList },
     { icon: "🎧", t: "Part 2 應答問題", s: "聽問題,選出最合適的回應(8 題/輪)", b: best("p2"), go: startToeicP2 },
     { icon: "✏️", t: "Part 5 句子填空", s: "文法與詞彙選擇題(10 題/輪)", b: best("p5"), go: startToeicP5 },
     { icon: "🗣️", t: "Part 3・4 對話與獨白", s: "雙聲道對話 + 廣播獨白,聽完答題", b: `完成 ${lcDone}/${TOEIC_LC.length} 組`, go: renderToeicLCList },
@@ -105,58 +109,6 @@ function renderToeicHub() {
     el.addEventListener("click", p.go);
     box.appendChild(el);
   }
-}
-
-// ---------- 高頻單字 ----------
-function renderToeicVoc() {
-  toeic.view = "voc";
-  $("#toeic-sub").textContent = "🗂️ 高頻單字";
-  const box = toeicBox();
-  box.innerHTML = `
-    <div class="steps-tip">點單字聽發音、點 ⭐ 收藏到單字單句本;背完按下方「單字測驗」檢驗(10 題)。</div>
-    <div id="tv-themes"></div>
-    <div class="practice-actions"><button id="tv-quiz" class="btn-primary">📝 單字測驗(10 題)</button></div>
-    <div id="tv-quiz-box" style="margin-top:14px"></div>`;
-  const themes = $("#tv-themes");
-  for (const t of TOEIC_WORDS) {
-    const panel = document.createElement("div");
-    panel.className = "card";
-    panel.innerHTML = `<div class="card-title">${t.emoji} ${t.theme}</div><div class="tv-words"></div>`;
-    const wrap = panel.querySelector(".tv-words");
-    for (const item of t.list) {
-      const chip = document.createElement("span");
-      chip.className = "tv-word";
-      chip.innerHTML = `<button class="tvw-play"><b>${item.w}</b> <i>${item.pos}</i> ${item.zh}</button>
-        <button class="tvw-star ${nbHasWord(item.w) ? "on" : ""}">${nbHasWord(item.w) ? "⭐" : "☆"}</button>`;
-      chip.querySelector(".tvw-play").addEventListener("click", (e) =>
-        playWordAudio(`audio/${item.w.toLowerCase()}.mp3`, e.currentTarget, item.w));
-      chip.querySelector(".tvw-star").addEventListener("click", (e) => {
-        const added = nbToggleWord({ w: item.w, zh: `${item.pos} ${item.zh}`, sentence: `TOEIC ${t.theme}主題字彙` });
-        e.target.textContent = added ? "⭐" : "☆";
-        e.target.classList.toggle("on", added);
-      });
-      wrap.appendChild(chip);
-    }
-    themes.appendChild(panel);
-  }
-  $("#tv-quiz").addEventListener("click", () => {
-    const all = TOEIC_WORDS.flatMap((t) => t.list);
-    const picked = shuffle(all).slice(0, 10);
-    const items = picked.map((it) => ({
-      q: `${it.w}(${it.pos})的意思是?`,
-      opts: [it.zh, ...shuffle(all.filter((x) => x.w !== it.w)).slice(0, 3).map((x) => x.zh)],
-      note: `${it.w} = ${it.zh}`,
-    }));
-    const qb = $("#tv-quiz-box");
-    qb.innerHTML = `<div class="card-title" style="margin-bottom:10px">📝 單字測驗</div>`;
-    renderQuizInto(qb, items, (c) => {
-      const pct = Math.round((c / items.length) * 100);
-      toeicSave("voc", pct);
-      qb.insertAdjacentHTML("beforeend",
-        `<div class="feedback ${pct >= 80 ? "good" : "bad"}">測驗完成:${c}/${items.length}(${pct}%),已記錄最佳成績。</div>`);
-    });
-    qb.scrollIntoView({ behavior: "smooth", block: "start" });
-  });
 }
 
 // ---------- Part 2 應答問題(一次 8 題,音檔為主)----------

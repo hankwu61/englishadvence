@@ -1188,3 +1188,105 @@ select.set-input { cursor: pointer; }
 .ts-phrase { position: relative; padding-right: 46px; }
 .ts-phrase-en { font-weight: 600; }
 .ts-phrase .btn-mini-audio { position: absolute; top: 10px; right: 12px; }
+
+/* ============ 多益 13 大主題字彙庫 ============ */
+.vc-affix-card { border: 1.5px dashed var(--primary); }
+
+/* 主題心智圖 */
+.vc-map {
+  background: var(--bg); border-radius: 16px; padding: 16px 14px; margin-bottom: 14px;
+}
+.vc-map-center {
+  display: block; margin: 0 auto 12px; width: fit-content;
+  background: var(--primary); color: #fff; font-weight: 800; font-size: 0.95rem;
+  border-radius: 999px; padding: 7px 20px;
+}
+.vc-map-branches { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+.vc-branch { background: var(--card); border-top: 3px solid var(--bc); border-radius: 12px; padding: 10px 12px; }
+.vc-branch-label { font-size: 0.8rem; font-weight: 800; color: var(--bc); margin-bottom: 6px; }
+.vc-branch-words { display: flex; flex-wrap: wrap; gap: 5px; }
+.vc-mw {
+  font-size: 0.78rem; color: var(--ink); background: var(--bg);
+  border-radius: 7px; padding: 3px 8px; cursor: pointer;
+}
+.vc-mw:hover { background: var(--primary-soft); color: var(--primary); }
+
+/* 字彙卡 */
+.vc-card {
+  background: var(--card); border: 1px solid var(--line); border-radius: 14px;
+  padding: 10px 12px; margin-bottom: 8px; transition: box-shadow 0.15s, border-color 0.15s;
+}
+.vc-card.flash { border-color: var(--primary); box-shadow: 0 0 0 3px var(--primary-soft); }
+.vc-head { display: flex; align-items: center; gap: 8px; cursor: pointer; }
+.vc-play, .vc-star, .vc-toggle {
+  background: none; border: none; cursor: pointer; font-size: 0.95rem;
+  font-family: inherit; color: var(--muted); flex-shrink: 0; padding: 2px 4px;
+}
+.vc-play:hover, .vc-star:hover, .vc-toggle:hover { color: var(--primary); }
+.vc-play.playing { animation: pulse 0.5s infinite alternate; }
+.vc-star.on { color: #A16509; }
+.vc-title { font-size: 0.98rem; }
+.vc-title b { color: var(--ink); }
+.vc-title i { font-style: normal; color: var(--muted); font-size: 0.75rem; margin-left: 3px; }
+.vc-zh { flex: 1; text-align: right; font-size: 0.85rem; color: var(--muted); }
+.vc-toggle { transition: transform 0.2s; }
+.vc-card.open .vc-toggle { transform: rotate(180deg); }
+.vc-def {
+  font-size: 0.82rem; color: var(--muted); font-style: italic;
+  margin: 4px 0 0 30px; line-height: 1.5;
+}
+.vc-body { display: none; margin: 10px 0 2px 30px; }
+.vc-card.open .vc-body { display: block; }
+.vc-line { font-size: 0.85rem; line-height: 1.7; margin-bottom: 6px; }
+.vc-tag {
+  display: inline-block; min-width: 40px; text-align: center;
+  font-size: 0.7rem; font-weight: 800; border-radius: 6px;
+  padding: 2px 6px; margin-right: 7px; vertical-align: 1px;
+}
+.vc-tag.syn { background: var(--good-soft); color: #0E7A50; }
+.vc-tag.ant { background: var(--bad-soft); color: #B03040; }
+.vc-tag.ph { background: var(--primary-soft); color: var(--primary); }
+.vc-tag.note { background: var(--gold-soft); color: #A16509; }
+.vc-tag.root { background: var(--sky-soft); color: #0B7FA8; }
+.vc-phs { display: inline-flex; flex-wrap: wrap; gap: 6px; vertical-align: top; }
+.vc-ph { background: var(--bg); border-radius: 8px; padding: 3px 9px; font-size: 0.82rem; }
+.vc-ph b { color: var(--primary); font-weight: 700; }
+
+/* 字根圖解 */
+.vc-root { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 5px; margin-top: 2px; }
+.vc-chip {
+  display: inline-flex; flex-direction: column; align-items: center;
+  border-radius: 9px; padding: 4px 10px; line-height: 1.25;
+}
+.vc-chip b { font-size: 0.86rem; }
+.vc-chip i { font-style: normal; font-size: 0.68rem; opacity: 0.8; }
+.vc-chip.pre { background: var(--primary-soft); color: var(--primary); }
+.vc-chip.root { background: var(--accent-soft); color: #B4560F; }
+.vc-chip.suf { background: var(--sky-soft); color: #0B7FA8; }
+.vc-plus, .vc-arrow { color: var(--muted); font-weight: 700; font-size: 0.8rem; }
+.vc-root-mean { font-size: 0.84rem; font-weight: 700; }
+
+/* 測驗題型標籤 */
+.vc-qt {
+  display: inline-block; font-size: 0.68rem; font-weight: 800;
+  border-radius: 6px; padding: 2px 7px; margin-right: 6px; vertical-align: 1px;
+}
+.vc-qt.zh { background: var(--primary-soft); color: var(--primary); }
+.vc-qt.def { background: var(--sky-soft); color: #0B7FA8; }
+.vc-qt.ph { background: var(--accent-soft); color: #B4560F; }
+.vc-qt.syn { background: var(--good-soft); color: #0E7A50; }
+.vc-qt.ant { background: var(--bad-soft); color: #B03040; }
+
+/* 字根字首總表 */
+.vc-legend { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; font-size: 0.8rem; color: var(--muted); }
+.vc-legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 5px; vertical-align: -2px; padding: 0; }
+.vc-affix-list { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+.vc-affix { background: var(--bg); border-left: 3px solid var(--ac); border-radius: 10px; padding: 9px 12px; }
+.vc-affix-head b { font-size: 0.95rem; color: var(--ac); }
+.vc-affix-head span { font-size: 0.8rem; color: var(--muted); margin-left: 8px; }
+.vc-affix-ex { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 6px; }
+.vc-affix-ex span { font-size: 0.76rem; background: var(--card); border-radius: 7px; padding: 3px 8px; }
+/* 圖例色塊改用實色,淺色底在小尺寸看不出來 */
+.vc-legend i.vc-chip.pre { background: var(--primary); }
+.vc-legend i.vc-chip.root { background: var(--accent); }
+.vc-legend i.vc-chip.suf { background: var(--sky); }
