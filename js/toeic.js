@@ -29,6 +29,8 @@ function toeicEstimate() {
   if (lc.length) parts.push(lc.reduce((a, b) => a + b, 0) / lc.length);
   const p7 = TOEIC_PART7.map((p) => d["p7_" + p.id]).filter((x) => x !== undefined);
   if (p7.length) parts.push(p7.reduce((a, b) => a + b, 0) / p7.length);
+  const sc = TOEIC_SCENES.map((s) => d["sc_" + s.id]).filter((x) => x !== undefined);
+  if (sc.length) parts.push(sc.reduce((a, b) => a + b, 0) / sc.length);
   if (!parts.length) return null;
   const pct = parts.reduce((a, b) => a + b, 0) / parts.length;
   const score = Math.round((pct / 100) * 990 / 5) * 5;
@@ -56,6 +58,7 @@ function openTOEIC() {
 
 function toeicBack() {
   audioPlayer.pause();
+  if (typeof stopReadAlong === "function") stopReadAlong();
   if (toeic.view === "hub") { goHome(); switchTab("learn"); }
   else { toeic.view = "hub"; renderToeicHub(); }
 }
@@ -83,7 +86,9 @@ function renderToeicHub() {
     </div>
     <div id="toeic-parts"></div>`;
 
+  const scDone = TOEIC_SCENES.filter((s) => d["sc_" + s.id] !== undefined).length;
   const parts = [
+    { icon: "📚", t: "13 大情境課文", s: "官方歸納的職場與生活情境,朗讀跟讀 + 理解測驗", b: `完成 ${scDone}/${TOEIC_SCENES.length} 篇`, go: renderToeicSceneList },
     { icon: "🗂️", t: "高頻單字", s: "6 大商務主題 × 10 字,附測驗", b: best("voc"), go: renderToeicVoc },
     { icon: "🎧", t: "Part 2 應答問題", s: "聽問題,選出最合適的回應(8 題/輪)", b: best("p2"), go: startToeicP2 },
     { icon: "✏️", t: "Part 5 句子填空", s: "文法與詞彙選擇題(10 題/輪)", b: best("p5"), go: startToeicP5 },
@@ -367,6 +372,103 @@ function openToeicP7(p) {
     $("#tp7-quiz").insertAdjacentHTML("beforeend", `
       <div class="feedback ${pct >= 50 ? "good" : "bad"}">本篇 ${c}/${p.questions.length}(${pct}%),已記錄最佳成績。</div>
       <div class="practice-actions"><button class="btn-secondary" onclick="renderToeicP7List()">回閱讀清單</button></div>`);
+  });
+}
+
+// ---------- 13 大情境課文 ----------
+function renderToeicSceneList() {
+  audioPlayer.pause();
+  if (typeof stopReadAlong === "function") stopReadAlong();
+  toeic.view = "sc-list";
+  $("#toeic-sub").textContent = "📚 13 大情境課文";
+  const d = toeicData();
+  const box = toeicBox();
+  box.innerHTML = `<div class="steps-tip">多益的題目都落在這 13 個情境裡。每篇課文都是該情境的真實職場文本:<b>朗讀時單字會逐字亮起</b>,點課文中任何單字可查發音與英英釋義,讀完做 3 題理解測驗。</div>`;
+  for (const sc of TOEIC_SCENES) {
+    const b = d["sc_" + sc.id];
+    const el = document.createElement("button");
+    el.className = "task-card";
+    el.innerHTML = `<span class="task-icon i1">${sc.icon}</span>
+      <span class="task-info"><b><span class="ts-no">${sc.no}</span>${sc.name}<small>${sc.en}</small></b><span>${sc.doc}《${sc.title}》</span></span>
+      <span class="toeic-best">${b !== undefined ? `最佳 ${b}%` : "未讀"}</span><span class="task-go">›</span>`;
+    el.addEventListener("click", () => openToeicScene(sc));
+    box.appendChild(el);
+  }
+}
+
+function openToeicScene(sc) {
+  toeic.view = "sc";
+  $("#toeic-sub").textContent = `${sc.icon} ${sc.name}`;
+  // 組成課文物件,直接沿用課程系統的逐字高亮與點字彈窗
+  const L = { passage: { aid: `p_ts_${sc.id}`, title: sc.title, en: sc.text, zh: sc.zh } };
+  const box = toeicBox();
+  box.innerHTML = `
+    <div class="practice-panel">
+      <div class="ts-head">
+        <span class="ts-badge">情境 ${sc.no} · ${sc.en}</span>
+        <span class="ts-doc">${sc.doc}</span>
+      </div>
+      <div class="chunk-line"><span class="chunk-big">${sc.title}</span></div>
+      <div class="shadow-controls">
+        <button id="ts-play" class="btn-audio">▶ 課文朗讀</button>
+        <button id="ts-slow" class="btn-audio slow">🐢 慢速</button>
+        <button id="ts-zh-toggle" class="btn-audio mine">🀄 中文翻譯</button>
+      </div>
+      <div id="ts-passage" class="sentence-box passage"></div>
+      <div id="ts-zh" class="sentence-box passage zh" style="display:none">${sc.zh}</div>
+
+      <div class="card-title" style="margin:16px 0 8px">🔑 情境核心字</div>
+      <div class="tv-words" id="ts-words"></div>
+
+      <div class="card-title" style="margin:16px 0 8px">💬 情境常用句</div>
+      <div id="ts-phrases"></div>
+
+      <div class="card-title" style="margin:16px 0 8px">📝 理解測驗(${sc.questions.length} 題)</div>
+      <div id="ts-quiz"></div>
+    </div>`;
+
+  renderInteractivePassage($("#ts-passage"), L);
+  $("#ts-play").addEventListener("click", () => playPassage(L, false));
+  $("#ts-slow").addEventListener("click", () => playPassage(L, true));
+  $("#ts-zh-toggle").addEventListener("click", () => {
+    const zh = $("#ts-zh");
+    zh.style.display = zh.style.display === "none" ? "block" : "none";
+  });
+
+  const wrap = $("#ts-words");
+  for (const item of sc.words) {
+    const chip = document.createElement("span");
+    chip.className = "tv-word";
+    chip.innerHTML = `<button class="tvw-play"><b>${item.w}</b> <i>${item.pos}</i> ${item.zh}</button>
+      <button class="tvw-star ${nbHasWord(item.w) ? "on" : ""}">${nbHasWord(item.w) ? "⭐" : "☆"}</button>`;
+    chip.querySelector(".tvw-play").addEventListener("click", (e) =>
+      playWordAudio(`audio/${item.w.toLowerCase()}.mp3`, e.currentTarget, item.w));
+    chip.querySelector(".tvw-star").addEventListener("click", (e) => {
+      const added = nbToggleWord({ w: item.w, zh: `${item.pos} ${item.zh}`, sentence: `TOEIC 情境:${sc.name}` });
+      e.target.textContent = added ? "⭐" : "☆";
+      e.target.classList.toggle("on", added);
+    });
+    wrap.appendChild(chip);
+  }
+
+  const pbox = $("#ts-phrases");
+  sc.phrases.forEach((p, k) => {
+    const row = document.createElement("div");
+    row.className = "sentence-box ts-phrase";
+    row.innerHTML = `<span class="ts-phrase-en">${p.en}</span>
+      <button class="btn-mini-audio">🔊</button>
+      <div class="conn-trans">${p.zh}</div>`;
+    row.querySelector("button").addEventListener("click", (e) =>
+      playWordAudio(`audio/ts_${sc.id}_p${k}.mp3`, e.target, p.en));
+    pbox.appendChild(row);
+  });
+
+  renderQuizInto($("#ts-quiz"), sc.questions, (c) => {
+    const pct = Math.round((c / sc.questions.length) * 100);
+    toeicSave("sc_" + sc.id, pct);
+    $("#ts-quiz").insertAdjacentHTML("beforeend", `
+      <div class="feedback ${pct >= 66 ? "good" : "bad"}">本篇 ${c}/${sc.questions.length}(${pct}%),已記錄最佳成績。</div>
+      <div class="practice-actions"><button class="btn-secondary" onclick="renderToeicSceneList()">回情境清單</button></div>`);
   });
 }
 

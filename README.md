@@ -54,6 +54,7 @@ AI 主動發起話題,你每回覆一次就分析**文法**、**內容切題度*
 
 | 單元 | 內容 |
 |---|---|
+| 📚 13 大情境課文 | 依官方歸納的 13 大情境(企業發展、辦公室、人事招募、財務預算、採購、技術領域、製造業、旅遊、娛樂藝文、健康保健、房屋地產、餐廳飲食、購物)各一篇職場短文;**朗讀時逐字高亮**、課文任何單字可點擊查釋義,並附中文翻譯、6 個情境核心字、3 句情境常用句與 3 題理解測驗 |
 | 🗂️ 高頻單字 | 6 大商務主題(辦公室、人事、會議、財務、商務行銷、出差旅遊)× 10 字,附詞性與中文;點字聽發音、點 ⭐ 收藏到單字單句本,背完做 10 題隨機測驗 |
 | 🎧 Part 2 應答問題 | 男聲念問題(可重播),從三個女聲回應中選最合適的;每個選項都能單獨點 🔊 重聽,答完顯示考點解析(8 題/輪) |
 | ✏️ Part 5 句子填空 | 文法與詞彙選擇題,涵蓋時態、詞性變化、介係詞搭配、連接詞等多益常考點(10 題/輪,附解析) |
@@ -282,13 +283,14 @@ npx wrangler pages deploy . --project-name=englishadvence
 | `generate_timings.py` | 重產課文音檔並擷取 WordBoundary 時間戳(需 `boundary="WordBoundary"`)|
 | `js/collocations.js` | 五級語塊庫(各 15 組,含英英釋義與例句)|
 | `js/toeic_data.js` | 多益題庫(60 高頻字、16 題 Part 2、24 題 Part 5、4 組聽力、4 篇閱讀)|
+| `js/toeic_scenes.js` | 多益 13 大情境課文(13 篇短文 × 核心字/常用句/測驗)|
 | `js/toeic.js` | 多益專區邏輯(五單元流程、雙聲道播放、分數帶預估)|
 | `js/toefl_data.js` | 托福題庫(60 學術字、4 篇學術閱讀、4 組聽力、4 題口說、2 題寫作)|
 | `js/toefl.js` | 托福專區邏輯(四大分項、計時口說評分、寫作檢核、AI 講評)|
 | `js/ielts_data.js` | 雅思題庫(60 核心字、3 篇判斷題閱讀、4 組聽力、4 張 Cue Card、4 題寫作)|
 | `js/ielts.js` | 雅思專區邏輯(TFNG/填空作答器、Band 換算、Task 1 圖表繪製、寫作檢核)|
 | `js/game.js` | 遊戲邏輯 |
-| `audio/` | 4,771 個預錄音檔(見下)|
+| `audio/` | 5,102 個預錄音檔(見下)|
 | `generate_audio.py` | Edge TTS 語音產生腳本 |
 
 ## 語音檔規則(Edge TTS,女聲 en-US-JennyNeural / 男聲 en-US-GuyNeural)
@@ -302,12 +304,14 @@ npx wrangler pages deploy . --project-name=englishadvence
 | `t2q_<i>.mp3` | 多益 Part 2 問題(**男聲**)| +0% |
 | `t2r_<i>_<j>.mp3` | 多益 Part 2 回應選項(女聲)| +0% |
 | `t3_<setId>_<k>.mp3` | 多益 Part 3・4 逐句(依 `sp` 欄位切換男/女聲)| +0% |
+| `p_ts_<sceneId>.mp3` | 多益情境課文(含逐字時間戳,另有 `_slow` 慢速)| +0% |
+| `ts_<sceneId>_p<k>.mp3` | 多益情境常用句 | -10% |
 | `tf3_<setId>_<k>.mp3` | 托福聽力逐句(依 `sp` 欄位切換男/女聲)| +0% |
 | `tfs_<taskId>.mp3` | 托福口說示範回答 | +0% |
 | `ie3_<setId>_<k>.mp3` | 雅思聽力逐句(依 `sp` 欄位切換男/女聲)| +0% |
 | `ies_<cueId>.mp3` | 雅思 Part 2 示範回答 | +0% |
 
-新增或修改字庫後執行 `python generate_audio.py` 補產(需 `pip install edge-tts`,已存在的檔案自動跳過)。修改課文後,另需執行 `python generate_timings.py` 重產課文音檔與逐字時間戳(兩者在同一串流中產生,保證高亮同步)。
+新增或修改字庫後執行 `python generate_audio.py` 補產(需 `pip install edge-tts`,已存在的檔案自動跳過)。修改課文後,另需執行 `python generate_timings.py` 重產課文音檔與逐字時間戳(兩者在同一串流中產生,保證高亮同步)。此腳本為**增量執行**:已有時間戳且音檔存在的軌道會自動沿用,只補產新課文。
 
 ### 點字彈窗的說明來源
 

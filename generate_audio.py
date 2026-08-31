@@ -156,6 +156,21 @@ def load_tasks() -> list[tuple[str, str, str]]:
                 token = token.rstrip("'").lower()
                 tasks.append((token, f"{token}.mp3", "-10%"))
 
+
+    # 多益 13 大情境課文:核心字、常用句、課文逐字(課文整段音檔由 generate_timings.py 產生)
+    scenes_path = ROOT / "js" / "toeic_scenes.js"
+    if scenes_path.exists():
+        sj = scenes_path.read_text(encoding="utf-8")
+        for w in re.findall(r'\{ w: "([A-Za-z]+)"', sj):
+            tasks.append((w, f"{w.lower()}.mp3", "-10%"))
+        for sm in re.finditer(r'id: "(\w+)", no: \d+,.*?text: "((?:[^"\\]|\\.)*)".*?phrases: \[(.*?)\],\s*questions', sj, re.S):
+            sid, text, pblock = sm.group(1), sm.group(2), sm.group(3)
+            for k, pm in enumerate(re.finditer(r'en: "((?:[^"\\]|\\.)*)"', pblock)):
+                tasks.append((pm.group(1).replace('\\"', '"'), f"ts_{sid}_p{k}.mp3", "-10%"))
+            for token in re.findall(r"[A-Za-z][A-Za-z']*", text.replace('\\"', '"')):
+                token = token.rstrip("'").lower()
+                tasks.append((token, f"{token}.mp3", "-10%"))
+
     # 去重(單字可能跨表重複)
     seen: set[str] = set()
     out = []

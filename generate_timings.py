@@ -26,7 +26,22 @@ def load_passages() -> list[tuple[str, str]]:
         text = f.read_text(encoding="utf-8")
         for aid, en in re.findall(r'aid: "(p_\w+)",\s*title: "[^"]*",\s*en: "((?:[^"\\]|\\.)*)"', text):
             out.append((aid, en.replace('\\"', '"').replace("\\'", "'")))
+    # 多益 13 大情境課文(aid = p_ts_<id>)
+    scenes = ROOT / "js" / "toeic_scenes.js"
+    if scenes.exists():
+        text = scenes.read_text(encoding="utf-8")
+        for sid, en in re.findall(r'id: "(\w+)", no: \d+,.*?text: "((?:[^"\\]|\\.)*)"', text, re.S):
+            out.append((f"p_ts_{sid}", en.replace('\\"', '"').replace("\\'", "'")))
     return out
+
+
+def load_existing() -> dict:
+    """讀入既有的 js/timings.js,讓本次只補產缺少的軌道。"""
+    path = ROOT / "js" / "timings.js"
+    if not path.exists():
+        return {}
+    m = re.search(r"const PASSAGE_TIMINGS = (\{.*\});", path.read_text(encoding="utf-8"), re.S)
+    return json.loads(m.group(1)) if m else {}
 
 
 async def gen_one(sem: asyncio.Semaphore, key: str, text: str, rate: str):
@@ -62,8 +77,14 @@ async def main() -> None:
         jobs.append((f"{aid}_slow", en, "-25%"))
     print(f"total tracks: {len(jobs)}", flush=True)
 
+    # 增量產生:已有時間戳且音檔存在的軌道直接沿用
+    timings: dict[str, list] = load_existing()
+    keep = {k: v for k, v in timings.items() if (AUDIO_DIR / f"{k}.mp3").exists()}
+    jobs = [j for j in jobs if j[0] not in keep]
+    timings = keep
+    print(f"reusing: {len(keep)} tracks | to generate: {len(jobs)}", flush=True)
+
     sem = asyncio.Semaphore(CONCURRENCY)
-    timings: dict[str, list] = {}
     done = 0
     for coro in asyncio.as_completed([gen_one(sem, k, t, r) for k, t, r in jobs]):
         key, marks = await coro

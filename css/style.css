@@ -1168,3 +1168,23 @@ select.set-input { cursor: pointer; }
 .ie-table th, .ie-table td { border: 1px solid var(--line); padding: 5px 8px; text-align: center; }
 .ie-table th { background: var(--bg); color: var(--muted); font-weight: 700; }
 .ie-table td:first-child { text-align: left; font-weight: 700; }
+
+/* ============ 多益 13 大情境課文 ============ */
+.ts-no {
+  display: inline-block; min-width: 22px; height: 22px; line-height: 22px;
+  text-align: center; border-radius: 7px; margin-right: 7px;
+  background: var(--primary); color: #fff; font-size: 0.75rem; font-weight: 800;
+}
+.task-info b small { color: var(--muted); font-weight: 500; font-size: 0.72rem; margin-left: 6px; }
+.ts-head { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-bottom: 8px; }
+.ts-badge {
+  font-size: 0.75rem; font-weight: 800; color: var(--primary);
+  background: var(--primary-soft); border-radius: 999px; padding: 4px 12px;
+}
+.ts-doc {
+  font-size: 0.75rem; font-weight: 700; color: var(--muted);
+  background: var(--bg); border-radius: 999px; padding: 4px 12px;
+}
+.ts-phrase { position: relative; padding-right: 46px; }
+.ts-phrase-en { font-weight: 600; }
+.ts-phrase .btn-mini-audio { position: absolute; top: 10px; right: 12px; }
